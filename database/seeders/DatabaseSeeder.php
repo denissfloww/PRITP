@@ -21,6 +21,13 @@ class DatabaseSeeder extends Seeder
             CapabilitySeeder::class,
             UserSubscriptionSeeder::class,
             SubscriptionCapabilitySeeder::class,
+            CurrencySeeder::class,
+            CustomerSeeder::class,
+            TenderClassifierSeeder::class,
+            TenderObjectSeeder::class,
+            TenderStageSeeder::class,
+            TenderTypeSeeder::class,
+            TenderSeeder::class
         ]);
     }
 }

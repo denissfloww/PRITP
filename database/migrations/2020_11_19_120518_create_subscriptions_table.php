@@ -14,7 +14,7 @@ class CreateSubscriptionsTable extends Migration
     public function up()
     {
         Schema::create('subscriptions', function (Blueprint $table) {
-            $table->id('id')->autoIncrement();
+            $table->id('id');
             $table->string('name');
             $table->text('description');
             $table->integer('price');

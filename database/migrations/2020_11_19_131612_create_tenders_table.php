@@ -6,43 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTendersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('tenders', function (Blueprint $table) {
-            $table->id('id')->autoIncrement();
-            $table->string('name');
-            $table->text('description');
-            $table->dateTime('start_request_date');
-            $table->dateTime('end_request_date');
-            $table->string('source_url');
-            $table->dateTime('result_date');
-            $table->integer('nmc_price');
-            $table->integer('ensure_request_price');
-            $table->integer('ensure_contract_price');
-            $table->integer('customer_id');
-            $table->foreign('customer_id')->references('id')->on('customer');
-            $table->integer('type_id');
-            $table->foreign('type_id')->references('id')->on('tender_types');
-            $table->integer('currency_id');
-            $table->foreign('currency_id')->references('id')->on('currency');
-            $table->integer('stage_id');
-            $table->foreign('stage_id')->references('id')->on('tender_stages');
-            $table->integer('classifiers_id');
-            $table->foreign('classifiers_id')->references('id')->on('classifiers');
+            $table->id('id');
+            $table->integer('number')->nullable();
+            $table->string('name')->unique();
+            $table->text('description')->nullable();
+            $table->string('source_url')->nullable();
+            $table->dateTime('start_request_date')->nullable();
+            $table->dateTime('end_request_date')->nullable();
+            $table->dateTime('result_date')->nullable();
+            $table->float('nmc_price')->nullable();
+            $table->float('ensure_request_price')->nullable();
+            $table->float('ensure_contract_price')->nullable();
+            $table->foreignId('customer_id')->constrained('customers');
+            $table->foreignId('type_id')->constrained('tender_types');
+            $table->foreignId('currency_id')->constrained('currencies');
+            $table->foreignId('stage_id')->constrained('tender_stages');
+            $table->foreignId('classifier_id')->constrained('tender_classifiers');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('tenders');

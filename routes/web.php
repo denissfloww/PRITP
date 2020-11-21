@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\TenderClassifierController;
+use App\Http\Controllers\TenderController;
+use App\Http\Controllers\TenderObjectController;
+use App\Http\Controllers\TenderStageController;
+use App\Http\Controllers\TenderTypeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +23,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('tender_types', TenderTypeController::class);
+Route::resource('tender_classifiers', TenderClassifierController::class);
+Route::resource('tender_stages', TenderStageController::class);
+Route::resource('customers', CustomerController::class);
+Route::resource('currencies', CurrencyController::class);
+Route::resource('tender_objects', TenderObjectController::class);
+Route::resource('tenders', TenderController::class);
