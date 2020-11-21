@@ -14,8 +14,8 @@ class CreateTenderTypesTable extends Migration
     public function up()
     {
         Schema::create('tender_types', function (Blueprint $table) {
-            $table->id('id')->autoIncrement();
-            $table->string('name')->nullable();
+            $table->id('id');
+            $table->string('name')->unique();
             $table->text('description')->nullable();
             $table->timestamps();
         });

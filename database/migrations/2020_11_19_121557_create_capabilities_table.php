@@ -14,7 +14,7 @@ class CreateCapabilitiesTable extends Migration
     public function up()
     {
         Schema::create('capabilities', function (Blueprint $table) {
-            $table->id('id')->autoIncrement();
+            $table->id('id');
             $table->string('name');
             $table->text('description');
             $table->timestamps();

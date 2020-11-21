@@ -4,20 +4,19 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTenderStagesTable extends Migration
+class CreateCurrenciesTable extends Migration
 {
     public function up()
     {
-        Schema::create('tender_stages', function (Blueprint $table) {
+        Schema::create('currencies', function (Blueprint $table) {
             $table->id('id');
-            $table->string('name')->unique();
-            $table->text('description')->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('tender_stages');
+        Schema::dropIfExists('currencies');
     }
 }

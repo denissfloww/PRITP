@@ -4,13 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTenderStagesTable extends Migration
+class CreateTenderObjectsTable extends Migration
 {
     public function up()
     {
-        Schema::create('tender_stages', function (Blueprint $table) {
+        Schema::create('tender_objects', function (Blueprint $table) {
             $table->id('id');
-            $table->string('name')->unique();
+            $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();
         });
@@ -18,6 +18,6 @@ class CreateTenderStagesTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('tender_stages');
+        Schema::dropIfExists('tender_objects');
     }
 }
