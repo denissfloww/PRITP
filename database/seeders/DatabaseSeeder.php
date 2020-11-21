@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\SubscriptionCapability;
+use Database\Factories\SubscriptionCapabilityFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,6 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call([
+            UserTableSeeder::class,
+            SubscriptionSeeder::class,
+            CapabilitySeeder::class,
+            UserSubscriptionSeeder::class,
+            SubscriptionCapabilitySeeder::class,
+        ]);
     }
 }
