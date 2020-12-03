@@ -15,8 +15,7 @@ class CreateTenderClassifiersTable extends Migration
     {
         Schema::create('tender_classifiers', function (Blueprint $table) {
             $table->id('id');
-            $table->integer('parent_id')->nullable();
-            $table->foreign('parent_id')->references('id')->on('tender_classifiers');
+            $table->foreignId('parent_id')->nullable()->constrained('tender_classifiers');
             $table->string('code')->unique();
             $table->text('description')->nullable();
             $table->timestamps();

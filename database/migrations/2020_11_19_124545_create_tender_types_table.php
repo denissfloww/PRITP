@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateTenderTypesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('tender_types', function (Blueprint $table) {
@@ -21,11 +16,6 @@ class CreateTenderTypesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('tender_types');

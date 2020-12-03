@@ -11,9 +11,9 @@ class CreateTendersTable extends Migration
         Schema::create('tenders', function (Blueprint $table) {
             $table->id('id');
             $table->integer('number')->nullable();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->text('description')->nullable();
-            $table->string('source_url')->nullable();
+            $table->string('source_url');
             $table->dateTime('start_request_date')->nullable();
             $table->dateTime('end_request_date')->nullable();
             $table->dateTime('result_date')->nullable();
