@@ -5,7 +5,8 @@
 * Кручковский
 * Перятин
 
-# [IDF1X](https://i.imgur.com/VITtIvd.jpeg)
+# [IDF1X](https://i.ibb.co/8b65JmV/IDF1X.png)
+# [Описание проекта](https://yadi.sk/i/Isn8DXHzURotEQ)
 
 
 **Чтоб ваш проект заработал необходимо:**
