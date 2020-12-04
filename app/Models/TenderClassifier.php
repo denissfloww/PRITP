@@ -14,6 +14,7 @@ use phpDocumentor\Reflection\File;
  * @property string $description
  * @property TenderClassifier parent
  * @property Tender[]|null tenders
+ * @property User[]|null mailingUsers
  */
 class TenderClassifier extends Model
 {
@@ -36,5 +37,10 @@ class TenderClassifier extends Model
     public function tenders()
     {
         return $this->hasMany(Tender::class);
+    }
+
+    public function mailingUsers()
+    {
+        return $this->belongsToMany(User::class, 'tender_mailings');
     }
 }

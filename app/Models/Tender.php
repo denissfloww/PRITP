@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Customer customer
  * @property Currency currency
  * @property TenderObject[]|null objects
+ * @property User[]|null favoriteUsers
  */
 class Tender extends Model
 {
@@ -73,5 +74,10 @@ class Tender extends Model
     public function objects()
     {
         return $this->belongsToMany(TenderObject::class)->using(TenderTenderObject::class);
+    }
+
+    public function favoriteUsers()
+    {
+        return $this->belongsToMany(User::class, 'tender_favorites');
     }
 }

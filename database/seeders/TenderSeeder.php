@@ -9,6 +9,7 @@ use App\Models\TenderClassifier;
 use App\Models\TenderObject;
 use App\Models\TenderStage;
 use App\Models\TenderType;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class TenderSeeder extends Seeder
@@ -26,6 +27,11 @@ class TenderSeeder extends Seeder
                 TenderObject::factory()->count(3),
                 ['quantity' => 13],
                 'objects'
+            )
+            ->hasAttached(
+                User::factory()->count(3),
+                [],
+                'favoriteUsers'
             )
             ->create();
     }
