@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use TheSeer\Tokenizer\Token;
 
 class AuthController extends Controller
 {
@@ -14,7 +13,6 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $http = new Client();
-
         $response = $http->post(sprintf('%s/oauth/token', self::HOST),
             [
                 'form_params' => [
@@ -28,29 +26,29 @@ class AuthController extends Controller
                 'headers' => [
                     'Accept' => 'application/json',
                 ]
-            ]);
-
+            ]
+        );
         $result = json_decode((string) $response->getBody(), true);
-        $token = 'Bearer' . $result['access_token'];
-        dd($token);
-
-        $response = $http->post(sprintf('%s/api/user', self::HOST),
+        $token = 'Bearer ' . $result['access_token'];
+        $response = $http->get(sprintf('%s/api/user', self::HOST),
             [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Authorization' => $token,
                 ]
-            ]);
-
-        $user = json_decode((string) $response->getBody(), true);
-
-        $dbUser = User::updateOrCreate(
-            [
-                'email' => $user['user']['email'],
-                'name' => $user['user']['name'],
             ]
         );
-
+        $user = json_decode((string) $response->getBody(), true);
+        $dbUser = User::updateOrCreate(
+            [
+                'uuid' => $user['uuid'],
+                'email' => $user['email'],
+                'first_name' => $user['first_name'],
+                'last_name'=> $user['last_name'],
+                'middle_name'=> $user['middle_name'],
+                'inn'=> $user['inn'],
+            ]
+        );
         return response()->json(auth()->login($dbUser));
     }
 }
