@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -28,7 +29,10 @@ class AuthController extends Controller
                 ]
             ]
         );
+
         $result = json_decode((string) $response->getBody(), true);
+
+
         $token = 'Bearer ' . $result['access_token'];
         $response = $http->get(sprintf('%s/api/user', self::HOST),
             [
@@ -38,6 +42,7 @@ class AuthController extends Controller
                 ]
             ]
         );
+
         $user = json_decode((string) $response->getBody(), true);
         $dbUser = User::updateOrCreate(
             [
@@ -49,6 +54,12 @@ class AuthController extends Controller
                 'inn'=> $user['inn'],
             ]
         );
-        return response()->json(auth()->login($dbUser));
+
+        return response()->json(JWTAuth::fromUser($dbUser));
+    }
+
+    public function me()
+    {
+        return response(auth()->user());
     }
 }
