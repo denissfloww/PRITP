@@ -17,3 +17,7 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command('tenders:parse', function (\App\Services\XmlTenderParser $parser){
+    die(get_class($parser));
+});
