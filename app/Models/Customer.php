@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @package App\Models
  *
  * @property string $name
- * @property int $inn
- * @property int $kpp
- * @property int $ogrn
+ * @property string $inn
+ * @property string $kpp
+ * @property string $ogrn
  * @property string $region
  * @property int $region_id
  * @property string $place
@@ -29,7 +29,17 @@ class Customer extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name', 'inn', 'kpp', 'ogrn', 'region', 'region_id', 'place', 'place_id', 'cp_name', 'cp_email', 'cp_phone'
+        'name',
+        'inn',
+        'kpp',
+        'ogrn',
+        'region',
+        'region_id',
+        'place',
+        'place_id',
+        'cp_name',
+        'cp_email',
+        'cp_phone'
     ];
 
     public function tenders()
