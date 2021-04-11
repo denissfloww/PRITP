@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Customer;
 use App\Models\Tender;
 use App\Models\Currency;
+use App\Models\TenderType;
 use Monolog\Logger;
 use Orchestra\Parser\Xml\Facade as XmlParser;
 use phpDocumentor\Reflection\Types\Null_;
@@ -14,18 +15,22 @@ use GuzzleHttp;
 //TODO: Подумать на какие сервисы можно разбить этот класс
 //TODO: Переработать миграции и таблицы в бд, так как некоторую инфу не возможно вытащить
 //TODO: Подумать что делать с регионами и адресами, как их хрнаить в бд?
-class XmlTenderParser
+class XmlTenderParserService
 {
-    private CustomerService $customerService;
+    private Fz233ParserService $fz233ParserService;
+    private Fz44ParserService $fz44ParserService;
     private GuzzleHttp\Client $client;
 
-    public function __construct(CustomerService $customerService)
+    public function __construct(Fz233ParserService $fz233ParserService, Fz44ParserService $fz44ParserService)
     {
         $this->client = new GuzzleHttp\Client([
             'headers' => [
                 'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:56.0) Gecko/20100101 Firefox/56.0',
             ]
         ]);
+
+        $this->fz233ParserService = $fz233ParserService;
+        $this->fz44ParserService = $fz44ParserService;
     }
 
     public function parse()
@@ -35,30 +40,31 @@ class XmlTenderParser
 
         $items = new \SimpleXmlElement($res->getBody()->getContents());//Завиток 2 работает
 
-        $i=0;
         foreach ($items->channel->item as $item) {
-            $item->description = trim(preg_replace(['/<[^>]*>/', '/\s+/'], ' ', $item->description));
-            $item->description = strip_tags($item->description);
-            $currency = $this->getCurrency($item->description);
-            $startRequestDate = preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $startRequestDateMatches);
-            $updateDate = preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $matches);
-            $updateDate = preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $matches);
-            $stage = preg_match('/Этап размещения:\s(\S+)\s(\S+)/m', $item->description, $matches);
-            $stage = $matches[1] .' '. $matches[2];
+            $description = trim(preg_replace(['/<[^>]*>/', '/\s+/'], ' ', $item->description));
+            $description = strip_tags($description);
 
-            $curr = $this->getCurrency($item,$i);
-            dd($curr);
-            $tender = Tender::updateOrCreate([
-                'currency' => $this->getCurrency($item),
-                'start_request_date' => $startRequestDateMatches[0],
-                'stage' => $stage,
-            ]);
+            $source_url = (string)$item->link;
 
-            if (preg_match('/Размещение выполняется по: 223-ФЗ/m', $item->description)) {
-                dd($tender);
+            if(!preg_match('/https:\/\/zakupki\.gov\.ru/m', $source_url)){
+                $source_url = 'https://zakupki.gov.ru' . $source_url;
             }
 
+            $tender = $this->makeTender($description, $source_url);
 
+            if (preg_match('/Размещение выполняется по: 223-ФЗ/m', $description)) {
+
+                $tenderType = $this->getTenderType('233-ФЗ', 'Федеральный закон от 18 июля 2011 года № 223-ФЗ «О закупках товаров, работ, услуг отдельными видами юридических лиц» — федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок отдельными видами юридических лиц.');
+                $tender->type = $tenderType;
+                $this->fz233ParserService->parse($tender);
+            }
+            elseif (preg_match('/Размещение выполняется по: 44-ФЗ/m', $description)){
+                $tenderType = $this->getTenderType('44-ФЗ', 'Федеральный закон № 44-ФЗ от 5 апреля 2013 года «О контрактной системе в сфере закупок товаров, работ, услуг для обеспечения государственных и муниципальных нужд» — Федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок товаров, работ и услуг для обеспечения государственных и');
+                $tender->type = $tenderType;
+                $this->fz44ParserService->parse($tender);
+            }
+
+            break;
 //                $currency = $this->GetCurrency($item->description);
 //                $startRequestDate = preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $matches);
 //                $updateDate = preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $matches);
@@ -93,39 +99,40 @@ class XmlTenderParser
         }
     }
 
-
-    //TODO: Подумать что делать в этом и подобных методах, создавать новую сущность через CreateOrUpdate и возвращать ее id?
-    private function getCustomer($crawler)
-    {
-        $CustomerName = $crawler->filter("tr:contains('Наименование организации') td")->last()->text();
-        $Inn = $crawler->filter("tr:contains('ИНН') td")->last()->text();
-        $Kpp = $crawler->filter("tr:contains('КПП') td")->last()->text();
-        $Ogrn = $crawler->filter("tr:contains('ОГРН') td")->last()->text();
-        $CpName = $crawler->filter("tr:contains('Контактное лицо') td")->last()->text();
-        $CpEmail = $crawler->filter("tr:contains('Электронная почта') td")->last()->text();
-        $CpPhone = $crawler->filter("tr:contains('Телефон') td")->last()->text();
-        return 0;
+    private function getTenderType(string $name, string $description){
+        return TenderType::updateOrCreate([
+            'name' => $name,
+            'description' => $description,
+        ]);
     }
 
-    private function getCurrency($itemDecs,$i)
+    private function makeTender($description,$source_url)
     {
-        $i+=1;
-        echo $i;
-        $check = preg_match('/Валюта:\s(\S+)\s(\S+)/m', $itemDecs, $matches);
-        $currencyName = $matches[1] . ' ' . $matches[2];
-        return $i;
-//        return Currency::updateOrCreate([
-//            'name' => $currencyName,
-//        ]);
+        $currency = $this->getCurrency($description);
+        preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m',$description, $startRequestDateMatches);
+        $updateDate = preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $description, $matches);
+        $stage = preg_match('/Этап размещения:\s(\S+)\s(\S+)/m',$description, $matches);
+        $stage = $matches[1] .' '. $matches[2];
 
-//        if (!$check) {
-//            return null;
-//        }
-//        $currencyName = sprintf('%s %s', $matches[1], $matches[2]);
-//        return Currency::updateOrCreate([
-//            'name' => $currencyName,
-//        ]);
+        $tender = new Tender([
+            'name' => base64_encode(random_bytes(10)),
+            'start_request_date' => $startRequestDateMatches[0],
+            'source_url'=>$source_url,
+            'stage' => $stage,
+        ]);
+
+        $tender->currency = $currency;
+
+        return $tender;
+    }
 
 
+    private function getCurrency($itemDecs)
+    {
+        preg_match('/Валюта:\s(\S+)\s(\S+)/m', $itemDecs, $currencyMatches);
+        $currencyName = $currencyMatches[1] . ' ' . $currencyMatches[2];
+        return Currency::updateOrCreate([
+            'name' => $currencyName
+        ]);
     }
 }
