@@ -5,12 +5,13 @@ namespace App\Services;
 
 
 use App\Models\Customer;
+use carono\okvad\Okvad2;
 use GuzzleHttp;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Fz233ParserService
 {
-    private GuzzleHttp\Client $client;
+    private $client;
     public function __construct()
     {
         $this->client = new GuzzleHttp\Client([
@@ -22,11 +23,13 @@ class Fz233ParserService
 
     public function parse($tender)
     {
+//        set_time_limit(600);
+        $test = Okvad2::getByCode('42.99');
+        dd($test);
         $htmlDom = $this->client->get($tender->source_url);
         $crawler = new Crawler($htmlDom->getBody()->getContents());
         $customer = $this->parseCustomer($crawler);
 
-        dd($tender);
     }
 
     private function parseCustomer($crawler)
