@@ -24,8 +24,8 @@ class Fz233ParserService
     public function parse($tender)
     {
 //        set_time_limit(600);
-        $test = Okvad2::getByCode('42.99');
-        dd($test);
+        $test = Okvad2::getSections();
+        dd($tender);
         $htmlDom = $this->client->get($tender->source_url);
         $crawler = new Crawler($htmlDom->getBody()->getContents());
         $customer = $this->parseCustomer($crawler);

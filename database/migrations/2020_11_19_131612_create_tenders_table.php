@@ -24,7 +24,6 @@ class CreateTendersTable extends Migration
             $table->foreignId('type_id')->constrained('tender_types');
             $table->foreignId('currency_id')->constrained('currencies');
             $table->foreignId('stage_id')->constrained('tender_stages');
-            $table->foreignId('classifier_id')->constrained('tender_classifiers');
             $table->softDeletes();
             $table->timestamps();
         });

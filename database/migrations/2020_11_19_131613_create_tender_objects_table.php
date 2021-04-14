@@ -12,6 +12,8 @@ class CreateTenderObjectsTable extends Migration
             $table->id('id');
             $table->string('name');
             $table->text('description')->nullable();
+            $table->foreignId('tender_id')->constrained('tenders');
+            $table->string('okvad2_classifier', 20)->nullable();
             $table->timestamps();
         });
     }

@@ -20,7 +20,8 @@
         "orchestra/parser": "^6.0",
         "symfony/css-selector": "^5.2",
         "symfony/dom-crawler": "^5.2",
-        "tymon/jwt-auth": "^1.0"
+        "tymon/jwt-auth": "^1.0",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

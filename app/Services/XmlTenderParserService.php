@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Customer;
 use App\Models\Tender;
 use App\Models\Currency;
+use App\Models\TenderStage;
 use App\Models\TenderType;
 use carono\okvad\Okvad2;
 use Monolog\Logger;
@@ -101,38 +102,46 @@ class XmlTenderParserService
         }
     }
 
-    private function getTenderType(string $name, string $description){
+    private function getTenderType(string $name, string $description)
+    {
         return TenderType::updateOrCreate([
             'name' => $name,
             'description' => $description,
         ]);
     }
 
-    private function makeTender($description,$source_url)
+    private function makeTender($description, $source_url)
     {
-        $currency = $this->getCurrency($description);
         preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m',$description, $startRequestDateMatches);
-        $updateDate = preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $description, $matches);
-        $stage = preg_match('/Этап размещения:\s(\S+)\s(\S+)/m',$description, $matches);
-        $stage = $matches[1] .' '. $matches[2];
+//        preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $description, $matches);
 
         $tender = new Tender([
             'name' => base64_encode(random_bytes(10)),
             'start_request_date' => $startRequestDateMatches[0],
             'source_url'=>$source_url,
-            'stage' => $stage,
         ]);
 
-        $tender->currency = $currency;
+        $tender->currency = $this->getCurrency($description);
+        $tender->stage = $this->getStage($description);
 
         return $tender;
     }
 
+    private function getStage($description)
+    {
+        preg_match('/Этап размещения:\s(\S+)\s(\S+)/m', $description, $matches);
+        $stage = $matches[1] .' '. $matches[2];
+
+        return TenderStage::updateOrCreate([
+            'name' => $stage,
+        ]);
+    }
 
     private function getCurrency($itemDecs)
     {
         preg_match('/Валюта:\s(\S+)\s(\S+)/m', $itemDecs, $currencyMatches);
         $currencyName = $currencyMatches[1] . ' ' . $currencyMatches[2];
+
         return Currency::updateOrCreate([
             'name' => $currencyName
         ]);

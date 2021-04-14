@@ -5,8 +5,8 @@
 * Кручковский
 * Перятин
 
-# [IDF1X](https://i.ibb.co/8b65JmV/IDF1X.png)
-# [Описание проекта](https://yadi.sk/i/Isn8DXHzURotEQ)
+# [IDF1X](https://i.ibb.co/9vq57Lb/public.png)
+# [Описание проекта](https://utmn.sharepoint.com/sites/msteams_97a781-4/_layouts/15/Doc.aspx?OR=teams&action=edit&sourcedoc={ac28cc91-8624-414a-8b0f-543ee71f01f7})
 
 
 **Чтоб ваш проект заработал необходимо:**

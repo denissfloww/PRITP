@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\TenderClassifierController;
 use App\Http\Controllers\TenderController;
 use App\Http\Controllers\TenderObjectController;
 use App\Http\Controllers\TenderStageController;
@@ -25,7 +24,6 @@ Route::get('/', function () {
 });
 
 Route::resource('tender_types', TenderTypeController::class);
-Route::resource('tender_classifiers', TenderClassifierController::class);
 Route::resource('tender_stages', TenderStageController::class);
 Route::resource('customers', CustomerController::class);
 Route::resource('currencies', CurrencyController::class);

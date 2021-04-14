@@ -21,9 +21,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property float $nmc_price
  * @property float $ensure_request_price
  * @property float $ensure_contract_price
+ * @property string $okvad2_classifier
  * @property TenderType type
  * @property TenderStage stage
- * @property TenderClassifier classifier
  * @property Customer customer
  * @property Currency currency
  * @property TenderObject[]|null objects
@@ -44,6 +44,7 @@ class Tender extends Model
         'nmc_price',
         'ensure_request_price',
         'ensure_contract_price',
+        'okvad2_classifier'
     ];
 
     public function type()
@@ -54,11 +55,6 @@ class Tender extends Model
     public function stage()
     {
         return $this->belongsTo(TenderStage::class);
-    }
-
-    public function classifier()
-    {
-        return $this->belongsTo(TenderClassifier::class);
     }
 
     public function customer()
@@ -73,7 +69,7 @@ class Tender extends Model
 
     public function objects()
     {
-        return $this->belongsToMany(TenderObject::class)->using(TenderTenderObject::class);
+        return $this->hasMany(TenderObject::class, 'tender_id', 'id');
     }
 
     public function favoriteUsers()

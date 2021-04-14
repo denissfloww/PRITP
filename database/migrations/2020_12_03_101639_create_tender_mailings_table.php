@@ -9,8 +9,9 @@ class CreateTenderMailingsTable extends Migration
     public function up()
     {
         Schema::create('tender_mailings', function (Blueprint $table) {
+            $table->id('id');
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('tender_classifier_id')->constrained('tender_classifiers');
+            $table->string('okvad2_classifier', 20);
             $table->timestamps();
         });
     }

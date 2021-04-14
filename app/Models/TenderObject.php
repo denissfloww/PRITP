@@ -18,11 +18,11 @@ class TenderObject extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'description'
+        'name', 'description', 'okvad2_classifier'
     ];
 
-    public function tenders()
+    public function tender()
     {
-        return $this->belongsToMany(Tender::class)->using(TenderTenderObject::class);
+        return $this->belongsTo(Tender::class);
     }
 }

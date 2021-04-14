@@ -14,6 +14,8 @@ class TenderObjectFactory extends Factory
         return [
             'name' => $this->faker->word,
             'description' => $this->faker->sentence,
+            'okvad2_classifier' => $this->faker->numerify('###.###.###')
+
         ];
     }
 }
