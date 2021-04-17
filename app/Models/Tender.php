@@ -69,7 +69,7 @@ class Tender extends Model
 
     public function objects()
     {
-        return $this->hasMany(TenderObject::class, 'tender_id', 'id');
+        return $this->hasMany(TenderObject::class);
     }
 
     public function favoriteUsers()

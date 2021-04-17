@@ -8,6 +8,7 @@ use App\Models\Currency;
 use App\Models\TenderStage;
 use App\Models\TenderType;
 use carono\okvad\Okvad2;
+use Illuminate\Support\Facades\Log;
 use Monolog\Logger;
 use Orchestra\Parser\Xml\Facade as XmlParser;
 use phpDocumentor\Reflection\Types\Null_;
@@ -37,8 +38,7 @@ class XmlTenderParserService
 
     public function parse()
     {
-
-        $url = env('TENDER_BASE_URI') . '?morphology=on&pageNumber=1&sortDirection=false&recordsPerPage=_10&showLotsInfoHidden=false&sortBy=UPDATE_DATE&fz44=on&fz223=on&af=on&ca=on&pc=on&pa=on&priceContractAdvantages44IdNameHidden=%7B%7D&priceContractAdvantages94IdNameHidden=%7B%7D&currencyIdGeneral=-1&selectedSubjectsIdNameHidden=%7B%7D&OrderPlacementSmallBusinessSubject=on&OrderPlacementRnpData=on&OrderPlacementExecutionRequirement=on&orderPlacement94_0=0&orderPlacement94_1=0&orderPlacement94_2=0&contractPriceCurrencyId=-1&budgetLevelIdNameHidden=%7B%7D&nonBudgetTypesIdNameHidden=%7B%7D';
+        $url = env('TENDER_BASE_URI') . '?morphology=on&pageNumber=1&sortDirection=false&recordsPerPage=_10&showLotsInfoHidden=false&sortBy=UPDATE_DATE&fz223=on&af=on&ca=on&pc=on&pa=on&priceContractAdvantages44IdNameHidden=%7B%7D&priceContractAdvantages94IdNameHidden=%7B%7D&currencyIdGeneral=-1&selectedSubjectsIdNameHidden=%7B%7D&OrderPlacementSmallBusinessSubject=on&OrderPlacementRnpData=on&OrderPlacementExecutionRequirement=on&orderPlacement94_0=0&orderPlacement94_1=0&orderPlacement94_2=0&contractPriceCurrencyId=-1&budgetLevelIdNameHidden=%7B%7D&nonBudgetTypesIdNameHidden=%7B%7D';
         $res = $this->client->get($url);//Завиток работает
 
         $items = new \SimpleXmlElement($res->getBody()->getContents());//Завиток 2 работает
@@ -46,28 +46,33 @@ class XmlTenderParserService
         foreach ($items->channel->item as $item) {
             $description = trim(preg_replace(['/<[^>]*>/', '/\s+/'], ' ', $item->description));
             $description = strip_tags($description);
-
             $source_url = (string)$item->link;
 
             if(!preg_match('/https:\/\/zakupki\.gov\.ru/m', $source_url)){
                 $source_url = 'https://zakupki.gov.ru' . $source_url;
             }
 
-            $tender = $this->makeTender($description, $source_url);
+            preg_match('/regNumber=(\d+)/m', $source_url, $numbersMatches);
+            $number = $numbersMatches[1];
+
+            $tender = $this->makeTender($description, $source_url, $number);
+
 
             if (preg_match('/Размещение выполняется по: 223-ФЗ/m', $description)) {
 
                 $tenderType = $this->getTenderType('233-ФЗ', 'Федеральный закон от 18 июля 2011 года № 223-ФЗ «О закупках товаров, работ, услуг отдельными видами юридических лиц» — федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок отдельными видами юридических лиц.');
-                $tender->type = $tenderType;
+                $tender->type()->associate($tenderType);
                 $this->fz233ParserService->parse($tender);
             }
             elseif (preg_match('/Размещение выполняется по: 44-ФЗ/m', $description)){
                 $tenderType = $this->getTenderType('44-ФЗ', 'Федеральный закон № 44-ФЗ от 5 апреля 2013 года «О контрактной системе в сфере закупок товаров, работ, услуг для обеспечения государственных и муниципальных нужд» — Федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок товаров, работ и услуг для обеспечения государственных и');
-                $tender->type = $tenderType;
+                $tender->type()->associate($tenderType);
                 $this->fz44ParserService->parse($tender);
             }
 
-            break;
+            Log::info('Tender created', ['id' => $tender->id, 'name' => $tender->name]);
+
+
 //                $currency = $this->GetCurrency($item->description);
 //                $startRequestDate = preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $matches);
 //                $updateDate = preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $matches);
@@ -110,19 +115,21 @@ class XmlTenderParserService
         ]);
     }
 
-    private function makeTender($description, $source_url)
+    private function makeTender($description, $source_url, $number)
     {
         preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m',$description, $startRequestDateMatches);
 //        preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $description, $matches);
 
-        $tender = new Tender([
-            'name' => base64_encode(random_bytes(10)),
-            'start_request_date' => $startRequestDateMatches[0],
-            'source_url'=>$source_url,
-        ]);
+        $tender = Tender::where(['number' => $number])->get();
+//        if (instanceof($tender) )
 
-        $tender->currency = $this->getCurrency($description);
-        $tender->stage = $this->getStage($description);
+        $tender = Tender::updateOrCreate(['number' => $number], [
+            'start_request_date' => date_create_from_format('d.m.Y', $startRequestDateMatches[1]),
+            'source_url' => $source_url,
+        ]);
+        $tender->currency()->associate($this->getCurrency($description));
+        $tender->stage()->associate($this->getStage($description));
+
 
         return $tender;
     }

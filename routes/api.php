@@ -22,7 +22,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/login', 'App\Http\Controllers\AuthController@login');
 Route::get('/me', 'App\Http\Controllers\AuthController@me');
-Route::get('/parse',function (\App\Services\XmlTenderParserService $parser){
+Route::get('/parse',function (\App\Services\XmlTenderParserService $parser) {
         $parser->parse();
 
 

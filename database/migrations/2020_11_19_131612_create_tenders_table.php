@@ -10,8 +10,8 @@ class CreateTendersTable extends Migration
     {
         Schema::create('tenders', function (Blueprint $table) {
             $table->id('id');
-            $table->integer('number')->nullable();
-            $table->string('name');
+            $table->string('number')->unique();
+            $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->string('source_url');
             $table->dateTime('start_request_date')->nullable();
@@ -20,10 +20,10 @@ class CreateTendersTable extends Migration
             $table->float('nmc_price')->nullable();
             $table->float('ensure_request_price')->nullable();
             $table->float('ensure_contract_price')->nullable();
-            $table->foreignId('customer_id')->constrained('customers');
-            $table->foreignId('type_id')->constrained('tender_types');
-            $table->foreignId('currency_id')->constrained('currencies');
-            $table->foreignId('stage_id')->constrained('tender_stages');
+            $table->foreignId('customer_id')->nullable()->constrained('customers');
+            $table->foreignId('type_id')->nullable()->constrained('tender_types');
+            $table->foreignId('currency_id')->nullable()->constrained('currencies');
+            $table->foreignId('stage_id')->nullable()->constrained('tender_stages');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property string name
  * @property string description
- * @property Tender[] tenders
+ * @property string okvad2_classifier
+ * @property Tender tender
  */
 class TenderObject extends Model
 {
