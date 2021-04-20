@@ -10,7 +10,7 @@ class CreateTenderObjectsTable extends Migration
     {
         Schema::create('tender_objects', function (Blueprint $table) {
             $table->id('id');
-            $table->string('name');
+            $table->text('name');
             $table->text('description')->nullable();
             $table->foreignId('tender_id')->constrained('tenders');
             $table->string('okvad2_classifier', 20)->nullable();

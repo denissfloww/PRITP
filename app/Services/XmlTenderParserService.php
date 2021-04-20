@@ -146,8 +146,10 @@ class XmlTenderParserService
 
     private function getCurrency($itemDecs)
     {
-        preg_match('/Валюта:\s(\S+)\s(\S+)/m', $itemDecs, $currencyMatches);
-        $currencyName = $currencyMatches[1] . ' ' . $currencyMatches[2];
+        $currencyName = 'Российский рубль';
+        if(preg_match('/Валюта:\s(\S+)\s(\S+)/m', $itemDecs, $currencyMatches)) {
+            $currencyName = $currencyMatches[1] . ' ' . $currencyMatches[2];
+        }
 
         return Currency::updateOrCreate([
             'name' => $currencyName

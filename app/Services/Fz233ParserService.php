@@ -30,28 +30,51 @@ class Fz233ParserService
         $customer = $this->parseCustomer($crawler);
         $tender->customer()->associate($customer);
         $tender->name = $this->parseName($crawler);
-        preg_match(
-            '/\d{1,2}\.\d{1,2}\.\d{4}/',
-            $crawler->filter("tr:contains('Дата и время окончания подачи заявок') td")->last()->text(),
-            $dateMatch
-        );
+
+        $tender->end_request_date = $this->getDate($crawler->filter("tr:contains('Дата и время окончания подачи заявок') td"));
+        $tender->result_date = $this->getDate($crawler->filter("tr:contains('Дата подведения итогов') td"));
 
 
-        $end_request_date = date_create_from_format('d.m.Y', $dateMatch[0]);
-        $tender->end_request_date = $end_request_date;
-
-        preg_match(
-            '/\d{1,2}\.\d{1,2}\.\d{4}/',
-            $crawler->filter("tr:contains('Дата подведения итогов') td")->last()->text(),
-            $dateMatch
-        );
-
-        $result_date = date_create_from_format('d.m.Y', $dateMatch[0]);
-        $tender->result_date = $result_date;
+//        preg_match(
+//            '/\d{1,2}\.\d{1,2}\.\d{4}/',
+//            $crawler->filter("tr:contains('Дата и время окончания подачи заявок') td")->last()->text(),
+//            $dateMatch
+//        );
+//
+//
+//        $end_request_date = date_create_from_format('d.m.Y', $dateMatch[0]);
+//        $tender->end_request_date = $end_request_date;
+//
+//        preg_match(
+//            '/\d{1,2}\.\d{1,2}\.\d{4}/',
+//            $crawler->filter("tr:contains('Дата подведения итогов') td")->last()->text(),
+//            $dateMatch
+//        );
+//
+//        $result_date = date_create_from_format('d.m.Y', $dateMatch[0]);
+//        $tender->result_date = $result_date;
 
         $tender->save();
         $this->getObjects($tender->number, $tender);
 
+    }
+
+    private function getDate($filter)
+    {
+        $dateHtml = $filter;
+
+        if($dateHtml->count() != 0)
+        {
+            if(preg_match(
+                '/\d{1,2}\.\d{1,2}\.\d{4}/',
+                $dateHtml->last()->text(),
+                $dateMatch
+            )){
+                return date_create_from_format('d.m.Y', $dateMatch[0]);
+            }
+            return null;
+        }
+        return null;
     }
 
     private function parseName($crawler){
@@ -60,11 +83,26 @@ class Fz233ParserService
 
     private function parseCustomer($crawler)
     {
-        $cp_email = $crawler->filter("tr:contains('Электронная почта') td");
-        ddd($cp_email);
-        if (empty($cp_email->nodes->get())){
-            $cp_email = $crawler->filter("tr:contains('Адрес электронной почты') td");
+        $cp_phone = $crawler->filter("tr:contains('Номер контактного телефона') td");
+        if ($cp_phone->count() == 0){
+            $cp_phone = $crawler->filter("tr:contains('Телефон') td");
+//            if($cp_phone->count() > 1){
+//
+//            }
+        }
 
+        $cp_email = $crawler->filter("tr:contains('Электронная почта') td");
+        if ($cp_email->count() == 0){
+            $cp_email = $crawler->filter("tr:contains('Адрес электронной почты') td");
+        }
+
+        $cp_name = $crawler->filter("tr:contains('Контактное лицо') td");
+
+        if($cp_name->count() == 0){
+            $cp_name = 'Отсутствуют';
+        }
+        else{
+            $cp_name = $cp_name->last()->text();
         }
 
         $customerData = [
@@ -76,11 +114,11 @@ class Fz233ParserService
             'region_id' => 0,
             'place' => 'test',
             'place_id' => 0,
-            'cp_name' => $crawler->filter("tr:contains('Контактное лицо') td")->last()->text(),
+            'cp_name' => $cp_name,
             'cp_email' => $cp_email->last()->text(),
-            'cp_phone' => $crawler->filter("tr:contains('Телефон') td")->last()->text(),
+            'cp_phone' => $cp_phone->last()->text(),
         ];
-        return Customer::updateOrCreate($customerData);
+        return Customer::updateOrCreate(['inn' => $customerData['inn']],$customerData);
 
 
 //        $customer = Customer::where('inn', $Inn);
