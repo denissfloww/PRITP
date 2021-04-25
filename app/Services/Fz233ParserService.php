@@ -9,7 +9,6 @@ use App\Models\TenderObject;
 use carono\okvad\Okvad2;
 use GuzzleHttp;
 use Symfony\Component\DomCrawler\Crawler;
-use Carbon\Carbon;
 
 class Fz233ParserService
 {
@@ -33,27 +32,6 @@ class Fz233ParserService
 
         $tender->end_request_date = $this->getDate($crawler->filter("tr:contains('Дата и время окончания подачи заявок') td"));
         $tender->result_date = $this->getDate($crawler->filter("tr:contains('Дата подведения итогов') td"));
-
-
-//        preg_match(
-//            '/\d{1,2}\.\d{1,2}\.\d{4}/',
-//            $crawler->filter("tr:contains('Дата и время окончания подачи заявок') td")->last()->text(),
-//            $dateMatch
-//        );
-//
-//
-//        $end_request_date = date_create_from_format('d.m.Y', $dateMatch[0]);
-//        $tender->end_request_date = $end_request_date;
-//
-//        preg_match(
-//            '/\d{1,2}\.\d{1,2}\.\d{4}/',
-//            $crawler->filter("tr:contains('Дата подведения итогов') td")->last()->text(),
-//            $dateMatch
-//        );
-//
-//        $result_date = date_create_from_format('d.m.Y', $dateMatch[0]);
-//        $tender->result_date = $result_date;
-
         $tender->save();
         $this->getObjects($tender->number, $tender);
 
@@ -86,9 +64,9 @@ class Fz233ParserService
         $cp_phone = $crawler->filter("tr:contains('Номер контактного телефона') td");
         if ($cp_phone->count() == 0){
             $cp_phone = $crawler->filter("tr:contains('Телефон') td");
-//            if($cp_phone->count() > 1){
-//
-//            }
+            if($cp_phone->count() == 0){
+                $cp_phone = $crawler->filter("tr:contains('Контактный телефон') td");
+            }
         }
 
         $cp_email = $crawler->filter("tr:contains('Электронная почта') td");
@@ -119,15 +97,6 @@ class Fz233ParserService
             'cp_phone' => $cp_phone->last()->text(),
         ];
         return Customer::updateOrCreate(['inn' => $customerData['inn']],$customerData);
-
-
-//        $customer = Customer::where('inn', $Inn);
-//        if ($customer === null) {
-//            $customer = Customer::create($customerData);
-//        } else {
-//            $customer->update($customerData);
-//        }
-//        $customer->save();
     }
 
     private function getObjects($regNumber, $tender){

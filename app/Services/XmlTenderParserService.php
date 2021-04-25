@@ -38,7 +38,7 @@ class XmlTenderParserService
 
     public function parse()
     {
-        $url = env('TENDER_BASE_URI') . '?morphology=on&pageNumber=1&sortDirection=false&recordsPerPage=_10&showLotsInfoHidden=false&sortBy=UPDATE_DATE&fz223=on&af=on&ca=on&pc=on&pa=on&priceContractAdvantages44IdNameHidden=%7B%7D&priceContractAdvantages94IdNameHidden=%7B%7D&currencyIdGeneral=-1&selectedSubjectsIdNameHidden=%7B%7D&OrderPlacementSmallBusinessSubject=on&OrderPlacementRnpData=on&OrderPlacementExecutionRequirement=on&orderPlacement94_0=0&orderPlacement94_1=0&orderPlacement94_2=0&contractPriceCurrencyId=-1&budgetLevelIdNameHidden=%7B%7D&nonBudgetTypesIdNameHidden=%7B%7D';
+        $url = env('TENDER_BASE_URI') . '?morphology=on&fz44=on';
         $res = $this->client->get($url);//Завиток работает
 
         $items = new \SimpleXmlElement($res->getBody()->getContents());//Завиток 2 работает
@@ -71,39 +71,6 @@ class XmlTenderParserService
             }
 
             Log::info('Tender created', ['id' => $tender->id, 'name' => $tender->name]);
-
-
-//                $currency = $this->GetCurrency($item->description);
-//                $startRequestDate = preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $matches);
-//                $updateDate = preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $matches);
-//                $updateDate = preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $item->description, $matches);
-//                $stage = preg_match('/Этап размещения:\s(\S+)\s(\S+)/m', $item->description, $matches);
-//                $stage = $matches[1] .' '. $matches[2];
-//                $htmlDom = $this->GetPage($item->link);
-//                $crawler = new Crawler($htmlDom['content']);
-//                $customer = $this->customerService->ParseCustomerFz233($crawler);
-//
-//
-////                $Customer = $this->GetCustomer($crawler);
-//                $Number = $crawler->filter("tr:contains('Реестровый номер извещения') td")->last()->text();
-//                break;
-////
-////                dump($matches[1]);
-////                $htmlDom = $this->GetPage($item->link);
-////                $crawler = new Crawler($htmlDom['content']);
-////                $CustomerName = $crawler->filter("tr:contains('Наименование организации') td")->last()->text();
-//
-////                $Name = $crawler->filter("tr:contains('Наименование закупки') td")->last()->text();
-////                $Name = $crawler->filter("tr:contains('Наименование закупки') td")->last()->text();
-////                dump($Name);
-//            }
-//
-////            echo "<li><a href = '{$item->link}' title = '$item->title'>",
-////            htmlspecialchars($item->title), "</a> - ", $item->description, "</li>";
-//        }
-//
-//
-
         }
     }
 
@@ -120,17 +87,12 @@ class XmlTenderParserService
         preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m',$description, $startRequestDateMatches);
 //        preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $description, $matches);
 
-        $tender = Tender::where(['number' => $number])->get();
-//        if (instanceof($tender) )
-
         $tender = Tender::updateOrCreate(['number' => $number], [
             'start_request_date' => date_create_from_format('d.m.Y', $startRequestDateMatches[1]),
             'source_url' => $source_url,
         ]);
         $tender->currency()->associate($this->getCurrency($description));
         $tender->stage()->associate($this->getStage($description));
-
-
         return $tender;
     }
 
