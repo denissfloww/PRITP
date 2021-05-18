@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Customer
+ *
  * @package App\Models
  *
  * @property string $name

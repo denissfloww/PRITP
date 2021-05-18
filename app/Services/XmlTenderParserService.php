@@ -99,7 +99,7 @@ class XmlTenderParserService
     private function getStage($description)
     {
         preg_match('/Этап размещения:\s(\S+)\s(\S+)/m', $description, $matches);
-        $stage = $matches[1] .' '. $matches[2];
+        $stage = $matches[1] . ' ' . $matches[2];
 
         return TenderStage::updateOrCreate([
             'name' => $stage,

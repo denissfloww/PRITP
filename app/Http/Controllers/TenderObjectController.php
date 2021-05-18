@@ -31,6 +31,7 @@ class TenderObjectController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,6 +43,7 @@ class TenderObjectController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\TenderObject  $tenderObject
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(TenderObject $tenderObject)
@@ -53,6 +55,7 @@ class TenderObjectController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\TenderObject  $tenderObject
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(TenderObject $tenderObject)
@@ -65,6 +68,7 @@ class TenderObjectController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\TenderObject  $tenderObject
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, TenderObject $tenderObject)
@@ -76,6 +80,7 @@ class TenderObjectController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\TenderObject  $tenderObject
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(TenderObject $tenderObject)

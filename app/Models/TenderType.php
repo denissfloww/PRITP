@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TenderType
+ *
  * @package App\Models
  *
  * @property string $name

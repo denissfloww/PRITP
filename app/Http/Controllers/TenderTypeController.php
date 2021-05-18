@@ -31,6 +31,7 @@ class TenderTypeController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -42,6 +43,7 @@ class TenderTypeController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\TenderType  $tenderType
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(TenderType $tenderType)
@@ -53,6 +55,7 @@ class TenderTypeController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\TenderType  $tenderType
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(TenderType $tenderType)
@@ -65,6 +68,7 @@ class TenderTypeController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\TenderType  $tenderType
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, TenderType $tenderType)
@@ -76,6 +80,7 @@ class TenderTypeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\TenderType  $tenderType
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(TenderType $tenderType)

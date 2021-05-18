@@ -115,7 +115,7 @@ class Fz44ParserService
         $htmlDom = $this->client->get($linkOnCustomerInfo->attr('href'));
         $customerInfoCrawler = new Crawler($htmlDom->getBody()->getContents());
         $customerAdditInfoLink = $customerInfoCrawler->filter("a:contains('ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ')")->attr('href');
-        $customerAdditInfoLink = env('TENDER_DOMEN').$customerAdditInfoLink;
+        $customerAdditInfoLink = env('TENDER_DOMEN') . $customerAdditInfoLink;
         $htmlDom = $this->client->get($customerAdditInfoLink);
         $customerAdditInfoCrawler = new Crawler($htmlDom->getBody()->getContents());
         $textOkvad = $customerAdditInfoCrawler->filter("section:contains('ОКВЭД') .section__info")->text();
