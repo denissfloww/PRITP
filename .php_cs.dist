@@ -13,6 +13,7 @@ $finder = PhpCsFixer\Finder::create()
     ]);
 
 $rules = [
+    '@PSR2' => true,
     'align_multiline_comment' => [
         'comment_type' => 'phpdocs_like',
     ],

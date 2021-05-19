@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-
 use App\Models\Customer;
 use App\Models\TenderObject;
 use carono\okvad\Okvad2;
@@ -34,25 +33,23 @@ class Fz44ParserService
         $this->getObjects($crawler, $tender);
     }
 
-    private function parseName($crawler){
+    private function parseName($crawler)
+    {
         $name = $crawler->filter("section:contains('Наименование объекта закупки') .section__info");
-        if($name->count() == 0){
+        if ($name->count() == 0) {
             $name = 'Отсутствует';
-        }
-        else{
+        } else {
             $name = $name->last()->text();
         }
         return $name;
-
     }
 
     private function parseCustomer($crawler)
     {
         $name = $crawler->filter("section:contains('Организация, осуществляющая размещение') .section__info");
-        if($name->count() == 0){
+        if ($name->count() == 0) {
             $name = 'Отсутствуют';
-        }
-        else{
+        } else {
             $name = $name->text();
         }
 
@@ -60,7 +57,7 @@ class Fz44ParserService
         $cpEmail = $crawler->filter("section:contains('Адрес электронной почты') .section__info")->text();
         $cpName = $crawler->filter("section:contains('Ответственное должностное лицо') .section__info")->text();
         $linkOnCustomerInfo = $crawler->filter("span:contains('Заказчик') a");
-        if ($linkOnCustomerInfo->count() == 0){
+        if ($linkOnCustomerInfo->count() == 0) {
             $linkOnCustomerInfo = $crawler->filter("section:contains('Размещение осуществляет') a");
         }
         $htmlDom = $this->client->get($linkOnCustomerInfo->attr('href'));
@@ -81,20 +78,19 @@ class Fz44ParserService
             'cp_email' => $cpEmail,
             'cp_phone' => $cpPhone,
         ];
-        return Customer::updateOrCreate(['inn' => $customerData['inn']],$customerData);
+        return Customer::updateOrCreate(['inn' => $customerData['inn']], $customerData);
     }
 
     private function getDate($filter)
     {
         $dateHtml = $filter;
 
-        if($dateHtml->count() != 0)
-        {
-            if(preg_match(
+        if ($dateHtml->count() != 0) {
+            if (preg_match(
                 '/\d{1,2}\.\d{1,2}\.\d{4}/',
                 $dateHtml->last()->text(),
                 $dateMatch
-            )){
+            )) {
                 return date_create_from_format('d.m.Y', $dateMatch[0]);
             }
             return null;
@@ -102,14 +98,15 @@ class Fz44ParserService
         return null;
     }
 
-    private function getObjects($crawler, $tender){
+    private function getObjects($crawler, $tender)
+    {
         $tableIndex = $crawler->filter('div:contains("Информация об объекте закупки") tbody')->filter('tr')->each(function ($tr, $i) {
             return $tr->filter('td')->each(function ($td, $i) {
                 return $td->html();
             });
         });
         $linkOnCustomerInfo = $crawler->filter("span:contains('Заказчик') a");
-        if ($linkOnCustomerInfo->count() == 0){
+        if ($linkOnCustomerInfo->count() == 0) {
             $linkOnCustomerInfo = $crawler->filter("section:contains('Размещение осуществляет') a");
         }
         $htmlDom = $this->client->get($linkOnCustomerInfo->attr('href'));
@@ -122,8 +119,8 @@ class Fz44ParserService
         preg_match('/((\d{1,3})+(\.\d{1,3})*)/m', $textOkvad, $okvadMatches);
         dump($tableIndex);
         //TODO:Надо пофиксить проблему с парсингом объектов закупки, а то там каждый раз рандомно заполняются
-        foreach ($tableIndex as $object){
-            if(!empty($object[1])){
+        foreach ($tableIndex as $object) {
+            if (!empty($object[1])) {
                 $object = new TenderObject([
                     'name' => $object[1],
                     'okvad2_classifier' => $okvadMatches[0],

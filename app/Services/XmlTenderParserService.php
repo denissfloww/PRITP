@@ -48,7 +48,7 @@ class XmlTenderParserService
             $description = strip_tags($description);
             $source_url = (string)$item->link;
 
-            if(!preg_match('/https:\/\/zakupki\.gov\.ru/m', $source_url)){
+            if (!preg_match('/https:\/\/zakupki\.gov\.ru/m', $source_url)) {
                 $source_url = 'https://zakupki.gov.ru' . $source_url;
             }
 
@@ -59,12 +59,10 @@ class XmlTenderParserService
 
 
             if (preg_match('/Размещение выполняется по: 223-ФЗ/m', $description)) {
-
                 $tenderType = $this->getTenderType('233-ФЗ', 'Федеральный закон от 18 июля 2011 года № 223-ФЗ «О закупках товаров, работ, услуг отдельными видами юридических лиц» — федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок отдельными видами юридических лиц.');
                 $tender->type()->associate($tenderType);
                 $this->fz233ParserService->parse($tender);
-            }
-            elseif (preg_match('/Размещение выполняется по: 44-ФЗ/m', $description)){
+            } elseif (preg_match('/Размещение выполняется по: 44-ФЗ/m', $description)) {
                 $tenderType = $this->getTenderType('44-ФЗ', 'Федеральный закон № 44-ФЗ от 5 апреля 2013 года «О контрактной системе в сфере закупок товаров, работ, услуг для обеспечения государственных и муниципальных нужд» — Федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок товаров, работ и услуг для обеспечения государственных и');
                 $tender->type()->associate($tenderType);
                 $this->fz44ParserService->parse($tender);
@@ -84,7 +82,7 @@ class XmlTenderParserService
 
     private function makeTender($description, $source_url, $number)
     {
-        preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m',$description, $startRequestDateMatches);
+        preg_match('/Размещено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $description, $startRequestDateMatches);
 //        preg_match('/Обновлено:\s([0-9]{2}\.[0-9]{2}\.[0-9]{4})/m', $description, $matches);
 
         $tender = Tender::updateOrCreate(['number' => $number], [
@@ -109,7 +107,7 @@ class XmlTenderParserService
     private function getCurrency($itemDecs)
     {
         $currencyName = 'Российский рубль';
-        if(preg_match('/Валюта:\s(\S+)\s(\S+)/m', $itemDecs, $currencyMatches)) {
+        if (preg_match('/Валюта:\s(\S+)\s(\S+)/m', $itemDecs, $currencyMatches)) {
             $currencyName = $currencyMatches[1] . ' ' . $currencyMatches[2];
         }
 

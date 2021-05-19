@@ -20,7 +20,7 @@ class CreateCustomersTable extends Migration
             $table->integer('place_id')->nullable();
             $table->text('cp_name')->nullable();
             $table->string('cp_email')->nullable();
-            $table->string('cp_phone',)->nullable();
+            $table->string('cp_phone', )->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

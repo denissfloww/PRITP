@@ -14,7 +14,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $http = new Client();
-        $response = $http->post(sprintf('%s/oauth/token', self::HOST),
+        $response = $http->post(
+            sprintf('%s/oauth/token', self::HOST),
             [
                 'form_params' => [
                     'grant_type' => 'password',
@@ -34,7 +35,8 @@ class AuthController extends Controller
 
 
         $token = 'Bearer ' . $result['access_token'];
-        $response = $http->get(sprintf('%s/api/user', self::HOST),
+        $response = $http->get(
+            sprintf('%s/api/user', self::HOST),
             [
                 'headers' => [
                     'Accept' => 'application/json',
