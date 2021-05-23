@@ -9,6 +9,7 @@ use App\Models\TenderObject;
 use carono\okvad\Okvad2;
 use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp;
+use Dadata\DadataClient;
 
 class Fz44ParserService
 {
@@ -26,6 +27,7 @@ class Fz44ParserService
     {
         $htmlDom = $this->client->get($tender->source_url);
         $crawler = new Crawler($htmlDom->getBody()->getContents());
+        $this->getLocation($crawler);
         $tender->name = $this->parseName($crawler);
         $customer = $this->parseCustomer($crawler);
         $tender->customer()->associate($customer);
@@ -72,11 +74,8 @@ class Fz44ParserService
             'name' => $name,
             'inn' => $inn,
             'kpp'=> $kpp,
-            'ogrn' => $ogrn ,
-            'region' => 'test',
-            'region_id' => 0,
-            'place' => 'test',
-            'place_id' => 0,
+            'ogrn' => $ogrn,
+            'location' => json_encode($this->getLocation($crawler)),
             'cp_name' => $cpName,
             'cp_email' => $cpEmail,
             'cp_phone' => $cpPhone,
@@ -120,7 +119,6 @@ class Fz44ParserService
         $customerAdditInfoCrawler = new Crawler($htmlDom->getBody()->getContents());
         $textOkvad = $customerAdditInfoCrawler->filter("section:contains('ОКВЭД') .section__info")->text();
         preg_match('/((\d{1,3})+(\.\d{1,3})*)/m', $textOkvad, $okvadMatches);
-        dump($tableIndex);
         //TODO:Надо пофиксить проблему с парсингом объектов закупки, а то там каждый раз рандомно заполняются
         foreach ($tableIndex as $object){
             if(!empty($object[1])){
@@ -132,5 +130,14 @@ class Fz44ParserService
                 $object->save();
             }
         }
+    }
+
+    private function getLocation($crawler){
+        $token = env('DADATA_SECRET');
+        $secret = env("DADATA_TOKEN");
+        $location = $crawler->filter("section:contains('Место нахождения') .section__info")->text();
+        $dadata = new DadataClient($token, $secret);
+        $response = $dadata->clean("address", $location);
+        return $response;
     }
 }

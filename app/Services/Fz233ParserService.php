@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Models\Customer;
 use App\Models\TenderObject;
 use carono\okvad\Okvad2;
+use Dadata\DadataClient;
 use GuzzleHttp;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -29,7 +30,6 @@ class Fz233ParserService
         $customer = $this->parseCustomer($crawler);
         $tender->customer()->associate($customer);
         $tender->name = $this->parseName($crawler);
-
         $tender->end_request_date = $this->getDate($crawler->filter("tr:contains('Дата и время окончания подачи заявок') td"));
         $tender->result_date = $this->getDate($crawler->filter("tr:contains('Дата подведения итогов') td"));
         $tender->save();
@@ -76,6 +76,7 @@ class Fz233ParserService
 
         $cp_name = $crawler->filter("tr:contains('Контактное лицо') td");
 
+
         if($cp_name->count() == 0){
             $cp_name = 'Отсутствуют';
         }
@@ -84,14 +85,11 @@ class Fz233ParserService
         }
 
         $customerData = [
-            'name' => $crawler->filter("tr:contains('Наименование организации') a")->last()->text(),
-            'inn' => $crawler->filter("tr:contains('ИНН') td")->last()->text(),
-            'kpp'=> $crawler->filter("tr:contains('КПП') td")->last()->text(),
-            'ogrn' => $crawler->filter("tr:contains('ОГРН') td")->last()->text() ,
-            'region' => 'test',
-            'region_id' => 0,
-            'place' => 'test',
-            'place_id' => 0,
+            'name' => $crawler->filter("table:contains('Наименование организации') tr:contains('Наименование организации') a")->last()->text(),
+            'inn' => $crawler->filter("table:contains('Наименование организации') tr:contains('ИНН') td")->last()->text(),
+            'kpp'=> $crawler->filter("table:contains('Наименование организации') tr:contains('КПП') td")->last()->text(),
+            'ogrn' => $crawler->filter("table:contains('Наименование организации') tr:contains('ОГРН') td")->last()->text(),
+            'location' => json_encode($this->getLocation($crawler)),
             'cp_name' => $cp_name,
             'cp_email' => $cp_email->last()->text(),
             'cp_phone' => $cp_phone->last()->text(),
@@ -135,5 +133,14 @@ class Fz233ParserService
                 $object->save();
             }
         }
+    }
+
+    private function getLocation($crawler){
+        $token = env('DADATA_SECRET');
+        $secret = env("DADATA_TOKEN");
+        $location = $crawler->filter("tr:contains('Место нахождения') td")->last()->text();
+        $dadata = new DadataClient($token, $secret);
+        $response = $dadata->clean("address", $location);
+        return $response;
     }
 }

@@ -15,9 +15,6 @@ use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp;
 
-//TODO: Подумать на какие сервисы можно разбить этот класс
-//TODO: Переработать миграции и таблицы в бд, так как некоторую инфу не возможно вытащить
-//TODO: Подумать что делать с регионами и адресами, как их хрнаить в бд?
 class XmlTenderParserService
 {
     private Fz233ParserService $fz233ParserService;
@@ -71,6 +68,8 @@ class XmlTenderParserService
             }
 
             Log::info('Tender created', ['id' => $tender->id, 'name' => $tender->name]);
+
+            break;
         }
     }
 
