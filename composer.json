@@ -8,8 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "7.4.*",
-        "ext-curl": "*",
+        "php": "^7.3|^8.0",
         "ext-json": "*",
         "ext-simplexml": "*",
         "carono/okvad2": "^1.0",
@@ -20,6 +19,7 @@
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "orchestra/parser": "^6.0",
+        "silber/bouncer": "v1.0.0-rc.10",
         "symfony/css-selector": "^5.2",
         "symfony/dom-crawler": "^5.2",
         "tucker-eric/eloquentfilter": "^3.0",
