@@ -12,9 +12,9 @@ class TenderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return Tender::filter($request->all())->get();
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use DateTimeInterface;
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -16,9 +17,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $name
  * @property string $description
  * @property string $source_url
- * @property \DateTimeInterface $start_request_date
- * @property \DateTimeInterface $end_request_date
- * @property \DateTimeInterface $result_date
+ * @property DateTimeInterface $start_request_date
+ * @property DateTimeInterface $end_request_date
+ * @property DateTimeInterface $result_date
  * @property float $nmc_price
  * @property float $ensure_request_price
  * @property float $ensure_contract_price
@@ -32,7 +33,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Tender extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Filterable;
 
     protected $fillable = [
         'number',

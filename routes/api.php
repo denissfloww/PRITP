@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TenderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Orchestra\Parser\Xml\Facade as XmlParser;
@@ -48,3 +49,6 @@ Route::get('/parse',function (\App\Services\XmlTenderParserService $parser) {
 ////    dump($xml);
 //    die(get_class($parser));
 });
+
+
+Route::resource('tenders', TenderController::class);
