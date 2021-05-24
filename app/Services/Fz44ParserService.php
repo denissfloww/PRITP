@@ -129,7 +129,8 @@ class Fz44ParserService
         }
     }
 
-    private function getLocation($crawler){
+    private function getLocation($crawler)
+    {
         $token = env('DADATA_SECRET');
         $secret = env("DADATA_TOKEN");
         $location = $crawler->filter("section:contains('Место нахождения') .section__info")->text();
