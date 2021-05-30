@@ -37,7 +37,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function mailingTenders()
     {
-        return $this->hasMany(Tender::class);
+        return $this->hasMany(TenderMailing::class);
     }
 
     public function getJWTIdentifier()

@@ -18,36 +18,33 @@ class UserController extends Controller
 
     }
 
-    //Приобритение тарифного плана. Не реализована сама покупка, т.к надо подключать сторонний сервис
+    //Приобретение тарифного плана. Не реализована сама покупка, т.к надо подключать сторонний сервис
     public function buySubscription(Request $request){
-        $userId = $request->userid;
+        $userId = $request->userId;
         $user = User::find($userId);
         if ($user === null)
             return response()->json('Пользователя не существует!', 404);
         // do magic (вызов обработчика платежей)
         Bouncer::allow('subscriber')->to('can-get-tenders');
-        $user->assign('simple-user');
+        $user->assign('subscriber');
 
         return response()->json("Подписка куплена",200);
     }
 
     //Подписка на тендеры опредленного типа, только тому юзеру который приобрел тариф.
     public function subscribe(Request $request){
-        $userId = $request->userid;
+        $userId = $request->userId;
         $user = User::find($userId);
-        if ($user === null)
-            return response()->json('Пользователя не существует!', 404);
-        $okvad2 = $request->okvad2;
-
-        $tenderMailing = new TenderMailing();
-        $tenderMailing->user = $user;
-        $tenderMailing->okvad2_classifier = $okvad2;
-        $tenderMailing->save();
-        if ($tenderMailing===null){
-            return response()->json('ты лох', 400);
+        if(Bouncer::is($user)->an('subscriber')){
+            if ($user === null)
+                return response()->json('Пользователя не существует!', 404);
+            $okvad2 = $request->okvad2;
+            $tenderMailing = new TenderMailing;
+            $tenderMailing->user_id = $user->id;
+            $tenderMailing->okvad2_classifier = $okvad2;
+            $tenderMailing->save();
+            return response()->json("Подписался",200);
         }
-        return response()->json("Подписался",200);
-
     }
 
     public function unSubscribe(Request $request){
