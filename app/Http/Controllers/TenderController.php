@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tender;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class TenderController extends Controller
 {
@@ -14,7 +16,16 @@ class TenderController extends Controller
      */
     public function index(Request $request)
     {
-        return Tender::filter($request->all())->get();
+        $userId = $request->userid;
+        $user = User::find($userId);
+        if ($user === null){
+            return response()->json('Пользователя не существует!', 404);
+        }
+        if(Bouncer::is($user)->an('simple-user')){
+            return Tender::filter($request->all())->get();
+        }
+        return response()->json('Отсутствуют права на поиск', 403);;
+
     }
 
     /**

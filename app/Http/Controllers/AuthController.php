@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -56,6 +57,9 @@ class AuthController extends Controller
                 'inn'=> $user['inn'],
             ]
         );
+
+        Bouncer::allow('simple-user')->to('can-search');
+        $dbUser->assign('simple-user');
 
         return response()->json(JWTAuth::fromUser($dbUser));
     }
