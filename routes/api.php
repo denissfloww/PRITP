@@ -20,8 +20,10 @@ use App\Services;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+Route::put('/buy', 'App\Http\Controllers\UserController@buySubscription');
+Route::post('/subscribe', 'App\Http\Controllers\UserController@subscribe');
 Route::post('/login', 'App\Http\Controllers\AuthController@login');
+
 Route::get('/me', 'App\Http\Controllers\AuthController@me');
 Route::get('/parse',function (\App\Services\XmlTenderParserService $parser) {
     $parser->parse();
