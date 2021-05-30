@@ -17,12 +17,20 @@ use App\Services;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')->group(function() {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::put('/buy', 'App\Http\Controllers\UserController@buySubscription');
+    Route::post('/unSubscribe', 'App\Http\Controllers\UserController@unSubscribe');
+    Route::post('/subscribe', 'App\Http\Controllers\UserController@subscribe');
+    Route::post('/addToFavorite', 'App\Http\Controllers\TenderController@addToFavorite');
+    Route::post('/removeFromFavorite', 'App\Http\Controllers\TenderController@removeFromFavorite');
+    Route::resource('tenders', TenderController::class);
 });
-Route::put('/buy', 'App\Http\Controllers\UserController@buySubscription');
-Route::post('/subscribe', 'App\Http\Controllers\UserController@subscribe');
-Route::post('/login', 'App\Http\Controllers\AuthController@login');
+
+Route::any('/login', 'App\Http\Controllers\AuthController@login')->name('login');
 
 Route::get('/me', 'App\Http\Controllers\AuthController@me');
 Route::get('/parse',function (\App\Services\XmlTenderParserService $parser) {
@@ -30,4 +38,3 @@ Route::get('/parse',function (\App\Services\XmlTenderParserService $parser) {
 });
 
 
-Route::resource('tenders', TenderController::class);
