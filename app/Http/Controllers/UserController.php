@@ -26,7 +26,7 @@ class UserController extends Controller
     public function buySubscription(Request $request) {
         $user= auth()->user();
         if ($user === null)
-            return response()->json('Пользователя не существует!', 404);
+            return response()->json('Пользователя не существует!', 422);
 
 
         // do magic (вызов обработчика платежей)
@@ -42,10 +42,12 @@ class UserController extends Controller
         $user = auth()->user();
         $okvad2 = $request->okvad2;
 
+        if ($user === null)
+            return response()->json('Пользователя не существует!', 422);
         if ($okvad2 === null)
-            return response()->json('okvad2 не существует!', 404);
+            return response()->json('okvad2 не существует!', 422);
         if (!Bouncer::is($user)->an('subscriber'))
-            return response()->json("У вас нет прав на подписку", 400);
+            return response()->json("У вас нет прав на подписку", 403);
         $tenderMailing = TenderMailing::where([
             ['user_id', $user->id],
             ['okvad2_classifier', $okvad2]
@@ -65,9 +67,9 @@ class UserController extends Controller
         $okvad2 = $request->okvad2;
 
         if ($user === null)
-            return response()->json('Пользователя не существует!', 404);
+            return response()->json('Пользователя не существует!', 422);
         if ($okvad2 === null)
-            return response()->json('okvad2 не существует!', 404);
+            return response()->json('okvad2 не существует!', 422);
 
         TenderMailing::where([
             ['user_id', '=',$user->id],
