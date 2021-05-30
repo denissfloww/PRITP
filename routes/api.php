@@ -33,8 +33,6 @@ Route::middleware('auth:api')->group(function() {
 Route::any('/login', 'App\Http\Controllers\AuthController@login')->name('login');
 
 Route::get('/me', 'App\Http\Controllers\AuthController@me');
-Route::get('/parse',function (\App\Services\XmlTenderParserService $parser) {
-    $parser->parse();
-});
+
 
 
