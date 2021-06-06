@@ -67,7 +67,6 @@ class XmlTenderParserService
 
             Log::info('Tender created', ['id' => $tender->id, 'name' => $tender->name]);
 
-            break;
         }
     }
 
