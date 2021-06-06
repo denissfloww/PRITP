@@ -64,4 +64,23 @@ class AuthController extends Controller
     {
         return response(auth()->user());
     }
+
+    public function registry(Request $request)
+    {
+        $http = new Client();
+        $response = $http->post(
+            sprintf('%s/api/registry', self::HOST),
+            [
+                'form_params' => [
+                    'email' => $request->get('email'),
+                    'password' => $request->get('password'),
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                ]
+            ]
+        );
+        $result = json_decode((string) $response->getBody(), true);
+        return $result;
+    }
 }
