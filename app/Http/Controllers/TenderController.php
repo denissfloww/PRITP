@@ -20,6 +20,15 @@ class TenderController extends Controller
      * operationId="tenders",
      * tags={"tender"},
      * security={ {"bearer": {} }},
+     *     @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      *   @OA\Parameter(
      *         name="number",
      *         in="query",
@@ -132,6 +141,98 @@ class TenderController extends Controller
      *             type="string",
      *         )
      *     ),
+     *     @OA\Parameter(
+     *         name="customer_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_inn",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_ogrn",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_kpp",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_location",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_contact_phone",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_contact_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="type_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="currency",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="currency_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="stage_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="objects_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="objects_okvad",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         ),
+     *     ),
+
      * @OA\Response(
      *    response=404,
      *    description="Тендеры не найдены",
@@ -182,6 +283,15 @@ class TenderController extends Controller
      * operationId="addToFavorite",
      * tags={"tender"},
      * security={ {"bearer": {} }},
+     *     @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      * @OA\RequestBody(
      *    required=true,
      *    description="передавать id тендера и JWT токен пользователя",
@@ -251,6 +361,15 @@ class TenderController extends Controller
      * operationId="removeFromFavorite",
      * tags={"tender"},
      * security={ {"bearer": {} }},
+     *     @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      * @OA\RequestBody(
      *    required=true,
      *    description="передавать id тендера и JWT токен пользователя",

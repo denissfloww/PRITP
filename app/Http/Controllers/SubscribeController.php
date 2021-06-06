@@ -33,6 +33,15 @@ class SubscribeController extends Controller
      * operationId="buy",
      * tags={"subscribe"},
      * security={ {"bearer": {} }},
+     *     @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      * @OA\Response(
      *    response=404,
      *    description="Пользователя не существует",
@@ -72,6 +81,15 @@ class SubscribeController extends Controller
      * operationId="subscribe",
      * tags={"subscribe"},
      * security={ {"bearer": {} }},
+     *     @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      * @OA\Response(
      *    response=404,
      *    description="okvad2 не существует",
@@ -135,6 +153,15 @@ class SubscribeController extends Controller
      * operationId="subscribe",
      * tags={"subscribe"},
      * security={ {"bearer": {} }},
+     *     @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      * @OA\Response(
      *    response=404,
      *    description="okvad2 не существует",

@@ -97,6 +97,15 @@ class AuthController extends Controller
      * operationId="me",
      * tags={"auth"},
      * security={ {"bearer": {} }},
+     *     @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      * @OA\Response(
      *    response=200,
      *    description="Возращает пользователя",

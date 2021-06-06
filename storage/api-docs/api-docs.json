@@ -68,6 +68,16 @@
                 "summary": "Возвращет данные user",
                 "description": "Возвращет данные user по jwt",
                 "operationId": "me",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Возращает пользователя",
@@ -192,6 +202,16 @@
                 "summary": "Покупка подписки",
                 "description": "пользователь покупает подписку",
                 "operationId": "buy",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "404": {
                         "description": "Пользователя не существует",
@@ -241,6 +261,16 @@
                 "summary": "Подписка на тендер",
                 "description": "Пользователь подписывается на изменения тендера",
                 "operationId": "subscribe",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "404": {
                         "description": "okvad2 не существует",
@@ -322,6 +352,16 @@
                 "summary": "Отписка от тендера",
                 "description": "Пользователь отписывается от изменения тендера",
                 "operationId": "subscribe",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "404": {
                         "description": "okvad2 не существует",
@@ -388,6 +428,14 @@
                 "description": "возращает тендеры с возможностью фильрации",
                 "operationId": "tenders",
                 "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
                     {
                         "name": "number",
                         "in": "query",
@@ -499,6 +547,97 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "customer_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_inn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_ogrn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_kpp",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_location",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_contact_phone",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_contact_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "currency",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "currency_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "stage_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "objects_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "objects_okvad",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -565,6 +704,16 @@
                 "summary": "Добавление в избранное",
                 "description": "Добавляет тендер в избранное по id",
                 "operationId": "addToFavorite",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "description": "передавать id тендера и JWT токен пользователя",
                     "required": true,
@@ -666,6 +815,16 @@
                 "summary": "Удаление из избранное",
                 "description": "Удаляет тендер из избранное по id",
                 "operationId": "removeFromFavorite",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "description": "передавать id тендера и JWT токен пользователя",
                     "required": true,
