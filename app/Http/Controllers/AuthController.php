@@ -15,9 +15,9 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      * path="/api/login",
-     * summary="Sign in",
+     * summary="Авторизация",
      * description="Login by email, password",
-     * operationId="authLogin",
+     * operationId="login",
      * tags={"auth"},
      * @OA\RequestBody(
      *    required=true,
@@ -25,12 +25,11 @@ class AuthController extends Controller
      *    @OA\JsonContent(
      *       required={"email","password"},
      *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
-     *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
-     *       @OA\Property(property="persistent", type="boolean", example="true"),
+     *       @OA\Property(property="password", type="string", format="password", example="PassWord12345")
      *    ),
      * ),
      * @OA\Response(
-     *    response=422,
+     *    response=401,
      *    description="Wrong credentials response",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
@@ -90,8 +89,84 @@ class AuthController extends Controller
         return response()->json(JWTAuth::fromUser($dbUser));
     }
 
+    /**
+     * @OA\get (
+     * path="/api/me",
+     * summary="Возвращет данные user",
+     * description="Возвращет данные user по jwt",
+     * operationId="me",
+     * tags={"auth"},
+     * security={ {"bearer": {} }},
+     * @OA\Response(
+     *    response=200,
+     *    description="Возращает пользователя",
+     *    @OA\JsonContent(
+     *    @OA\Property(property="User", type="object", ref="#/components/schemas/User"),
+     *      )
+     *),
+     * @OA\Response(
+     *    response=401,
+     *    description="Wrong credentials response",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
+     *        )
+     *     )
+     * ),
+
+     * )
+     */
     public function me()
     {
         return response(auth()->user());
     }
+
+
+    /**
+     * @OA\Post(
+     * path="/api/register",
+     * summary="Регистрация",
+     * description="регистрация нового пользователя",
+     * operationId="register",
+     * tags={"auth"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="передавать данные пользователя",
+     *    @OA\JsonContent(
+     *       required={
+     *     "email",
+     *     "first_name",
+     *     "last_name",
+     *     "middle_name",
+     *     "inn",
+     *     "password",
+     *    },
+     *       @OA\Property(property="email", type="string", format="email", example="user1@mail.com"),
+     *       @OA\Property(property="first_name", type="string", example="Денис"),
+     *       @OA\Property(property="last_name", type="string",  example="Бугаков"),
+     *       @OA\Property(property="middle_name", type="string", example="Юрьевич"),
+     *       @OA\Property(property="inn", type="string", format="inn", example="1092364000695"),
+     *       @OA\Property(property="password", type="string", format="password", example="PassWord12345")
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Пользователь зарегистрирован",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Пользователь заругистрирован")
+),
+     *      )
+     *),
+     * @OA\Response(
+     *    response=422,
+     *    description="Регистрация не удалась",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Такой пользователь уже существует")
+     *        )
+     *     )
+     * )
+     */
+    public function register(){
+
+    }
+
 }

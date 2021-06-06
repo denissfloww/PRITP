@@ -21,18 +21,18 @@ Route::middleware('auth:api')->group(function() {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
-
+    Route::get('/me', 'App\Http\Controllers\AuthController@me');
     Route::put('/buy', 'App\Http\Controllers\UserController@buySubscription');
-    Route::post('/unSubscribe', 'App\Http\Controllers\UserController@unSubscribe');
-    Route::post('/subscribe', 'App\Http\Controllers\UserController@subscribe');
-    Route::post('/addToFavorite', 'App\Http\Controllers\TenderController@addToFavorite');
-    Route::post('/removeFromFavorite', 'App\Http\Controllers\TenderController@removeFromFavorite');
+    Route::delete('/tenders/unSubscribe', 'App\Http\Controllers\UserController@unSubscribe');
+    Route::post('/tenders/subscribe', 'App\Http\Controllers\UserController@subscribe');
+    Route::post('/tenders/addToFavorite', 'App\Http\Controllers\TenderController@addToFavorite');
+    Route::delete('/tenders/removeFromFavorite', 'App\Http\Controllers\TenderController@removeFromFavorite');
     Route::resource('tenders', TenderController::class);
 });
 
 Route::any('/login', 'App\Http\Controllers\AuthController@login')->name('login');
 
-Route::get('/me', 'App\Http\Controllers\AuthController@me');
+
 
 
 

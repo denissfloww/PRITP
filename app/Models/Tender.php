@@ -30,6 +30,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Currency currency
  * @property TenderObject[]|null objects
  * @property User[]|null favoriteUsers
+ * @OA\Schema(
+ *     title="Tender model",
+ *     description="Tender model",
+ * )
  */
 class Tender extends Model
 {
@@ -48,6 +52,172 @@ class Tender extends Model
         'ensure_contract_price',
         'okvad2_classifier'
     ];
+
+    /**
+     * @OA\Property(
+     *     format="int64",
+     *     title="ID",
+     *     default=1,
+     *     description="ID",
+     * )
+     *
+     * @var integer
+     */
+    private $number;
+
+    /**
+     * @OA\Property(
+     *     format="placed",
+     *     title="name",
+     *     default="Ms. Natasha Effertz PhD",
+     *     description="name",
+     * )
+     *
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @OA\Property(
+     *     format="placed",
+     *     title="description",
+     *     default="Non id et similique vel omnis quidem quaerat.",
+     *     description="description",
+     * )
+     *
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @OA\Property(
+     *     format="placed",
+     *     title="source_url",
+     *     default="https://www.lockman.info/dolorum-aperiam-autem-quos-ipsam-aut",
+     *     description="source_url",
+     * )
+     *
+     * @var string
+     */
+    private $source_url;
+
+    /**
+     * @OA\Property(
+     *     format="timestamp",
+     *     title="start_request_date",
+     *     default="2014-03-07 05:45:31",
+     *     description="start_request_date",
+     * )
+     *
+     * @var string
+     */
+    private $start_request_date;
+
+    /**
+     * @OA\Property(
+     *     format="timestamp",
+     *     title="end_request_date",
+     *     default="2022-04-08 02:34:31",
+     *     description="end_request_date",
+     * )
+     *
+     * @var string
+     */
+    private $end_request_date;
+    /**
+     * @OA\Property(
+     *     format="timestamp",
+     *     title="result_date",
+     *     default="2023-01-05 23:12:07",
+     *     description="result_date",
+     * )
+     *
+     * @var string
+     */
+    private $result_date;
+    /**
+     * @OA\Property(
+     *     format="placed",
+     *     title="nmc_price",
+     *     default="3459.86",
+     *     description="nmc_price",
+     * )
+     *
+     * @var string
+     */
+    private $nmc_price;
+    /**
+     * @OA\Property(
+     *     format="placed",
+     *     title="ensure_request_price",
+     *     default="9640.54",
+     *     description="ensure_request_price",
+     * )
+     *
+     * @var string
+     */
+    private $ensure_request_price;
+    /**
+     * @OA\Property(
+     *     format="placed",
+     *     title="ensure_contract_price",
+     *     default="3500.85",
+     *     description="ensure_contract_price",
+     * )
+     *
+     * @var string
+     */
+    private $ensure_contract_price;
+
+    /**
+     * @OA\Property(
+     *     format="int32",
+     *     title="customer_id",
+     *     default=11,
+     *     description="customer_id",
+     * )
+     *
+     * @var integer
+     */
+    private $customer_id;
+
+    /**
+     * @OA\Property(
+     *     format="int32",
+     *     title="type_id",
+     *     default=1,
+     *     description="type_id",
+     * )
+     *
+     * @var integer
+     */
+    private $type_id;
+
+    /**
+     * @OA\Property(
+     *     format="int32",
+     *     title="currency_id",
+     *     default=11,
+     *     description="currency_id",
+     * )
+     *
+     * @var integer
+     */
+    private $currency_id;
+
+    /**
+     * @OA\Property(
+     *     format="int32",
+     *     title="stage_id",
+     *     default=1,
+     *     description="stage_id",
+     * )
+     *
+     * @var integer
+     */
+    private $stage_id;
+
+
 
     public function type()
     {
