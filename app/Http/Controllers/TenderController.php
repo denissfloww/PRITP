@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tender;
-use App\Models\TenderFavorite;
 use App\Models\TenderMailing;
 use App\Models\User;
+use App\Services\ExcelExporter\ExportService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class TenderController extends Controller
@@ -501,5 +502,169 @@ class TenderController extends Controller
     public function destroy(Tender $tender)
     {
         //
+    }
+
+    /**
+     * @OA\get(
+     * path="/api/tenders/export",
+     * summary="Экспорт",
+     * description="Экопртирует тендоры по фильтрам в excel",
+     * operationId="export",
+     * tags={"tender"},
+     * security={ {"bearer": {} }},
+     *     @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="type_id",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="currency_id",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="stage_id",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int32",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="okvad2_classifier",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_inn",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_ogrn",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_kpp",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_location",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_contact_phone",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="customer_contact_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="type_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="currency",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="currency_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="stage_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="objects_name",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         )
+     *     ),
+     *     @OA\Parameter(
+     *         name="objects_okvad",
+     *         in="query",
+     *         @OA\Schema(
+     *             type="string",
+     *         ),
+     *     ),
+     * @OA\Response(
+     *    response=403,
+     *    description="Отсутствуют права на выгрузку в excel",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Отсутствуют права на выгрузку в excel")
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Данные выгружены в excel",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Удалён из избранного")
+     *        )
+     *     ),
+     * )
+     */
+    public function exportExcel(Request $request){
+        $user = auth()->user();
+        if (Bouncer::is($user)->an('subscriber')){
+            $tenders = Tender::filter($request->all())->get();
+            return Excel::download(new ExportService($tenders), 'Тендеры.xlsx');
+        }
+        return response()->json('Отсутствуют права на выгрузку в excel', 403);
+
     }
 }
