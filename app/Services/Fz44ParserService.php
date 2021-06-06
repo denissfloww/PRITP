@@ -67,12 +67,14 @@ class Fz44ParserService
         $inn = $customerInfoCrawler->filter("section:contains('ИНН') .section__info")->text();
         $kpp = $customerInfoCrawler->filter("section:contains('КПП') .section__info")->text();
         $ogrn = $customerInfoCrawler->filter("section:contains('ОГРН') .section__info")->text();
+        $location = $this->getLocation($crawler);
         $customerData = [
             'name' => $name,
             'inn' => $inn,
             'kpp'=> $kpp,
             'ogrn' => $ogrn,
-            'location' => json_encode($this->getLocation($crawler)),
+            'location' => $location,
+            'json_location'=> json_encode($this->getLocationForDaData($location)),
             'cp_name' => $cpName,
             'cp_email' => $cpEmail,
             'cp_phone' => $cpPhone,
@@ -131,9 +133,14 @@ class Fz44ParserService
 
     private function getLocation($crawler)
     {
+        $location = $crawler->filter("section:contains('Место нахождения') .section__info")->text();
+        return $location;
+    }
+
+    public function getLocationForDaData($location){
         $token = env('DADATA_SECRET');
         $secret = env("DADATA_TOKEN");
-        $location = $crawler->filter("section:contains('Место нахождения') .section__info")->text();
+        //тут место для дадаты
         return $location;
 //        $dadata = new DadataClient($token, $secret);
 //        $response = $dadata->clean("address", $location);

@@ -31,8 +31,5 @@ Route::middleware('auth:api')->group(function() {
 });
 
 Route::any('/login', 'App\Http\Controllers\AuthController@login')->name('login');
-
-
-
-
+Route::post('/registry','App\Http\Controllers\AuthController@registry');
 

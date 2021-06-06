@@ -15,7 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $inn
  * @property string $kpp
  * @property string $ogrn
- * @property array $location
+ * @property array $json_location
+ * @property string $location
  * @property string $cp_name
  * @property string $cp_email
  * @property string $cp_phone
@@ -32,6 +33,7 @@ class Customer extends Model
         'kpp',
         'ogrn',
         'location',
+        'json_location',
         'cp_name',
         'cp_email',
         'cp_phone'

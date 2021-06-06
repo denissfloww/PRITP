@@ -81,12 +81,15 @@ class Fz233ParserService
             $cp_name = $cp_name->last()->text();
         }
 
+        $location = $this->getLocation($crawler);
+
         $customerData = [
             'name' => $crawler->filter("table:contains('Наименование организации') tr:contains('Наименование организации') a")->last()->text(),
             'inn' => $crawler->filter("table:contains('Наименование организации') tr:contains('ИНН') td")->last()->text(),
             'kpp'=> $crawler->filter("table:contains('Наименование организации') tr:contains('КПП') td")->last()->text(),
             'ogrn' => $crawler->filter("table:contains('Наименование организации') tr:contains('ОГРН') td")->last()->text(),
-            'location' => json_encode($this->getLocation($crawler)),
+            'location' => $location,
+            'json_location' => json_encode($this->getLocationForDaData($location)),
             'cp_name' => $cp_name,
             'cp_email' => $cp_email->last()->text(),
             'cp_phone' => $cp_phone->last()->text(),
@@ -133,9 +136,14 @@ class Fz233ParserService
 
     private function getLocation($crawler)
     {
+        $location = $crawler->filter("tr:contains('Место нахождения') td")->last()->text();
+        return $location;
+    }
+
+    public function getLocationForDaData($location){
         $token = env('DADATA_SECRET');
         $secret = env("DADATA_TOKEN");
-        $location = $crawler->filter("tr:contains('Место нахождения') td")->last()->text();
+        //тут место для дадаты
         return $location;
 //        $dadata = new DadataClient($token, $secret);
 //        $response = $dadata->clean("address", $location);
