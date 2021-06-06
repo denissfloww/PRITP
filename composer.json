@@ -12,6 +12,7 @@
         "ext-json": "*",
         "ext-simplexml": "*",
         "carono/okvad2": "^1.0",
+        "darkaonline/l5-swagger": "^8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
@@ -23,7 +24,8 @@
         "symfony/css-selector": "^5.2",
         "symfony/dom-crawler": "^5.2",
         "tucker-eric/eloquentfilter": "^3.0",
-        "tymon/jwt-auth": "^1.0"
+        "tymon/jwt-auth": "^1.0",
+        "zircote/swagger-php": "^3.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

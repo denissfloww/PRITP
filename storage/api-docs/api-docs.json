@@ -1,0 +1,1108 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Your super  ApplicationAPI",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Авторизация",
+                "description": "Login by email, password",
+                "operationId": "login",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user1@mail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sorry, wrong email address or password. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Возвращет данные user",
+                "description": "Возвращет данные user по jwt",
+                "operationId": "me",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Возращает пользователя",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "User": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Wrong credentials response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Sorry, wrong email address or password. Please try again"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Регистрация",
+                "description": "регистрация нового пользователя",
+                "operationId": "register",
+                "requestBody": {
+                    "description": "передавать данные пользователя",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "first_name",
+                                    "last_name",
+                                    "middle_name",
+                                    "inn",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user1@mail.com"
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Денис"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Бугаков"
+                                    },
+                                    "middle_name": {
+                                        "type": "string",
+                                        "example": "Юрьевич"
+                                    },
+                                    "inn": {
+                                        "type": "string",
+                                        "format": "inn",
+                                        "example": "1092364000695"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Пользователь зарегистрирован",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Пользователь заругистрирован"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/buy": {
+            "put": {
+                "tags": [
+                    "subscribe"
+                ],
+                "summary": "Покупка подписки",
+                "description": "пользователь покупает подписку",
+                "operationId": "buy",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Пользователя не существует",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Пользователя не существует"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Подписка куплена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "string",
+                                            "example": "Подписка куплена"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/tenders/subscribe": {
+            "post": {
+                "tags": [
+                    "subscribe"
+                ],
+                "summary": "Подписка на тендер",
+                "description": "Пользователь подписывается на изменения тендера",
+                "operationId": "subscribe",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "okvad2 не существует",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "okvad2 не существует"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "У вас нет прав на подписку",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "У вас нет прав на подписку"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "У вас уже есть такая подписка",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "У вас уже есть такая подписка"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Подписался",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "string",
+                                            "example": "Подписался"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/tenders/unSubscribe": {
+            "delete": {
+                "tags": [
+                    "subscribe"
+                ],
+                "summary": "Отписка от тендера",
+                "description": "Пользователь отписывается от изменения тендера",
+                "operationId": "subscribe",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "okvad2 не существует",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "okvad2 не существует"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "У вас нет прав на подписку",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "У вас нет прав на подписку"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Подписка куплена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "string",
+                                            "example": "Отписался"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/tenders": {
+            "get": {
+                "tags": [
+                    "tender"
+                ],
+                "summary": "Возращает тендеры",
+                "description": "возращает тендеры с возможностью фильрации",
+                "operationId": "tenders",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "number",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "source_url",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "start_requset_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "timestamp"
+                        }
+                    },
+                    {
+                        "name": "end_requset_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "timestamp"
+                        }
+                    },
+                    {
+                        "name": "result_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "timestamp"
+                        }
+                    },
+                    {
+                        "name": "nmc_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "float"
+                        }
+                    },
+                    {
+                        "name": "ensure_request_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "float"
+                        }
+                    },
+                    {
+                        "name": "ensure_contract_price",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "type_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "currency_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "stage_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32"
+                        }
+                    },
+                    {
+                        "name": "okvad2_classifier",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_inn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_ogrn",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_kpp",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_location",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_contact_phone",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "customer_contact_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "currency",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "currency_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "stage_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "objects_name",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "objects_okvad",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "404": {
+                        "description": "Тендеры не найдены",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Тендеров соответствующих таким фильтрам нет"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Пользователь не зарегистрирован",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Пользователь не зарегистрирован"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Возвращенные тендеры",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Tender": {
+                                            "$ref": "#/components/schemas/Tender"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/tenders/addToFavorite": {
+            "post": {
+                "tags": [
+                    "tender"
+                ],
+                "summary": "Добавление в избранное",
+                "description": "Добавляет тендер в избранное по id",
+                "operationId": "addToFavorite",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "передавать id тендера и JWT токен пользователя",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tender_id"
+                                ],
+                                "properties": {
+                                    "tender_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Такого тендера не существует",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Такого тендера не существует"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Отсутствуют права на добавление в избранное",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Отсутствуют права на добавление в избранное"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "У вас уже есть тендер в избранном",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "У вас уже есть тендер в избранном"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Добавлен в избранное",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "string",
+                                            "example": "Добавлен в избранное"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/tenders/removeFromFavorite": {
+            "delete": {
+                "tags": [
+                    "tender"
+                ],
+                "summary": "Удаление из избранное",
+                "description": "Удаляет тендер из избранное по id",
+                "operationId": "removeFromFavorite",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "передавать id тендера и JWT токен пользователя",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tender_id"
+                                ],
+                                "properties": {
+                                    "tender_id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Такого тендера не существует",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Такого тендера не существует"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Отсутствуют права на удаление из избранного",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Отсутствуют права на удаление из избранного"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "У вас уже есть тендер в избранном",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "У вас уже есть тендер в избранном"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Удалён из избранного",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Удалён из избранного"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Tender": {
+                "title": "Tender model",
+                "description": "Tender model",
+                "properties": {
+                    "number": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "default": 1
+                    },
+                    "name": {
+                        "title": "name",
+                        "description": "name",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "Ms. Natasha Effertz PhD"
+                    },
+                    "description": {
+                        "title": "description",
+                        "description": "description",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "Non id et similique vel omnis quidem quaerat."
+                    },
+                    "source_url": {
+                        "title": "source_url",
+                        "description": "source_url",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "https://www.lockman.info/dolorum-aperiam-autem-quos-ipsam-aut"
+                    },
+                    "start_request_date": {
+                        "title": "start_request_date",
+                        "description": "start_request_date",
+                        "type": "string",
+                        "format": "timestamp",
+                        "default": "2014-03-07 05:45:31"
+                    },
+                    "end_request_date": {
+                        "title": "end_request_date",
+                        "description": "end_request_date",
+                        "type": "string",
+                        "format": "timestamp",
+                        "default": "2022-04-08 02:34:31"
+                    },
+                    "result_date": {
+                        "title": "result_date",
+                        "description": "result_date",
+                        "type": "string",
+                        "format": "timestamp",
+                        "default": "2023-01-05 23:12:07"
+                    },
+                    "nmc_price": {
+                        "title": "nmc_price",
+                        "description": "nmc_price",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "3459.86"
+                    },
+                    "ensure_request_price": {
+                        "title": "ensure_request_price",
+                        "description": "ensure_request_price",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "9640.54"
+                    },
+                    "ensure_contract_price": {
+                        "title": "ensure_contract_price",
+                        "description": "ensure_contract_price",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "3500.85"
+                    },
+                    "customer_id": {
+                        "title": "customer_id",
+                        "description": "customer_id",
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 11
+                    },
+                    "type_id": {
+                        "title": "type_id",
+                        "description": "type_id",
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 1
+                    },
+                    "currency_id": {
+                        "title": "currency_id",
+                        "description": "currency_id",
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 11
+                    },
+                    "stage_id": {
+                        "title": "stage_id",
+                        "description": "stage_id",
+                        "type": "integer",
+                        "format": "int32",
+                        "default": 1
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User model",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "default": 1
+                    },
+                    "uuid": {
+                        "title": "uuid",
+                        "description": "uuid",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "8d587133-180c-3dfd-acc1-f5ab35e10730"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "email",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "edeckow@example.org"
+                    },
+                    "first_name": {
+                        "title": "first_name",
+                        "description": "first_name",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "Pearline"
+                    },
+                    "last_name": {
+                        "title": "last_name",
+                        "description": "last_name",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "Price"
+                    },
+                    "middle_name": {
+                        "title": "middle_name",
+                        "description": "middle_name",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "Eleonore"
+                    },
+                    "inn": {
+                        "title": "inn",
+                        "description": "inn",
+                        "type": "string",
+                        "format": "placed",
+                        "default": "496625159283"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "422": {
+                "description": "Регистрация не удалась",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Такой пользователь уже существует"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}
