@@ -18,6 +18,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Artisan::command('tenders:parse', function (\App\Services\XmlTenderParserService $parser) {
+Artisan::command('tenders:parse', function (\App\Services\TenderParser\XmlTenderParserService $parser) {
     $parser->parse();
 });

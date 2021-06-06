@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services;
+namespace App\Services\TenderParser;
 
 use App\Models\Customer;
 use App\Models\TenderObject;
