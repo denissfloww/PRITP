@@ -14,7 +14,8 @@ class CreateCustomersTable extends Migration
             $table->string('inn')->nullable()->unique();
             $table->string('ogrn')->nullable()->unique();
             $table->string('kpp')->nullable();
-            $table->json('location')->nullable();
+            $table->string('location')->nullable();
+            $table->json('json_location')->nullable();
             $table->text('cp_name')->nullable();
             $table->string('cp_email')->nullable();
             $table->string('cp_phone', )->nullable();
