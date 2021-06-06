@@ -136,8 +136,9 @@ class Fz233ParserService
         $token = env('DADATA_SECRET');
         $secret = env("DADATA_TOKEN");
         $location = $crawler->filter("tr:contains('Место нахождения') td")->last()->text();
-        $dadata = new DadataClient($token, $secret);
-        $response = $dadata->clean("address", $location);
-        return $response;
+        return $location;
+//        $dadata = new DadataClient($token, $secret);
+//        $response = $dadata->clean("address", $location);
+//        return $response;
     }
 }

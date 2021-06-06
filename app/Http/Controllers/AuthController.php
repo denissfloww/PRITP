@@ -9,7 +9,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    const HOST = '127.0.0.1:8000';
+    const HOST = 'http://127.0.0.1:8000';
 
     public function login(Request $request)
     {

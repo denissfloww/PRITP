@@ -99,8 +99,8 @@ class Fz44ParserService
 
     private function getObjects($crawler, $tender)
     {
-        $tableIndex = $crawler->filter('div:contains("Информация об объекте закупки") tbody')->filter('tr')->each(function ($tr, $i) {
-            return $tr->filter('td')->each(function ($td, $i) {
+        $tableIndex = $crawler->filter('div:contains("Информация об объекте закупки") tbody')->filter('tableBlock__row')->each(function ($tr, $i) {
+            return $tr->filter('td:nth-child(3n)')->each(function ($td, $i) {
                 return $td->html();
             });
         });
@@ -134,8 +134,9 @@ class Fz44ParserService
         $token = env('DADATA_SECRET');
         $secret = env("DADATA_TOKEN");
         $location = $crawler->filter("section:contains('Место нахождения') .section__info")->text();
-        $dadata = new DadataClient($token, $secret);
-        $response = $dadata->clean("address", $location);
-        return $response;
+        return $location;
+//        $dadata = new DadataClient($token, $secret);
+//        $response = $dadata->clean("address", $location);
+//        return $response;
     }
 }
