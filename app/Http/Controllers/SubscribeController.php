@@ -27,7 +27,7 @@ class SubscribeController extends Controller
     //Приобретение тарифного плана. Не реализована сама покупка, т.к надо подключать сторонний сервис
     /**
      * @OA\put(
-     * path="/api/buy",
+     * path="/api/subscribe/buy",
      * summary="Покупка подписки",
      * description="пользователь покупает подписку",
      * operationId="buy",
@@ -75,11 +75,11 @@ class SubscribeController extends Controller
     //Подписка на тендеры опредленного типа, только тому юзеру который приобрел тариф.
     /**
      * @OA\Post(
-     * path="/api/tenders/subscribe",
+     * path="/api/tenders/mailing",
      * summary="Подписка на тендер",
      * description="Пользователь подписывается на изменения тендера",
-     * operationId="subscribe",
-     * tags={"subscribe"},
+     * operationId="mailing",
+     * tags={"tender"},
      * security={ {"bearer": {} }},
      *     @OA\Parameter(
      *         name="Authorization",
@@ -90,6 +90,14 @@ class SubscribeController extends Controller
      *             type="string"
      *         )
      *     ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="передавать okvad2 тендера и JWT токен пользователя",
+     *    @OA\JsonContent(
+     *       required={"okvad2"},
+     *       @OA\Property(property="okvad2", type="string", example="12.123"),
+     *    ),
+     * ),
      * @OA\Response(
      *    response=404,
      *    description="okvad2 не существует",
@@ -147,11 +155,11 @@ class SubscribeController extends Controller
 
     /**
      * @OA\delete(
-     * path="/api/tenders/unSubscribe",
+     * path="/api/tenders/mailing",
      * summary="Отписка от тендера",
      * description="Пользователь отписывается от изменения тендера",
-     * operationId="subscribe",
-     * tags={"subscribe"},
+     * operationId="Unmailing",
+     * tags={"tender"},
      * security={ {"bearer": {} }},
      *     @OA\Parameter(
      *         name="Authorization",
@@ -162,6 +170,14 @@ class SubscribeController extends Controller
      *             type="string"
      *         )
      *     ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="передавать okvad2 тендера и JWT токен пользователя",
+     *    @OA\JsonContent(
+     *       required={"okvad2"},
+     *       @OA\Property(property="okvad2", type="string", example="12.123"),
+     *    ),
+     * ),
      * @OA\Response(
      *    response=404,
      *    description="okvad2 не существует",

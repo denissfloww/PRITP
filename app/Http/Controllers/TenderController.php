@@ -278,7 +278,7 @@ class TenderController extends Controller
 
     /**
      * @OA\Post(
-     * path="/api/tenders/addToFavorite",
+     * path="/api/tenders/favorite",
      * summary="Добавление в избранное",
      * description="Добавляет тендер в избранное по id",
      * operationId="addToFavorite",
@@ -356,7 +356,7 @@ class TenderController extends Controller
 
     /**
      * @OA\delete(
-     * path="/api/tenders/removeFromFavorite",
+     * path="/api/tenders/favorite",
      * summary="Удаление из избранное",
      * description="Удаляет тендер из избранное по id",
      * operationId="removeFromFavorite",

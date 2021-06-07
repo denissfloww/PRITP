@@ -63,6 +63,18 @@ class Tender extends Model
      *
      * @var integer
      */
+    private $id;
+
+    /**
+     * @OA\Property(
+     *     format="int64",
+     *     title="ID",
+     *     default=1,
+     *     description="ID",
+     * )
+     *
+     * @var integer
+     */
     private $number;
 
     /**

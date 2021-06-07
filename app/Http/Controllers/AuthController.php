@@ -29,13 +29,21 @@ class AuthController extends Controller
      *    ),
      * ),
      * @OA\Response(
+     *    response=200,
+     *    description="Возращает JWT",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="nfrwkJFJIOWE.FJIO")
+     *      )
+     *),
+     * @OA\Response(
      *    response=401,
      *    description="Wrong credentials response",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="Sorry, wrong email address or password. Please try again")
      *        )
      *     )
-     * )
+     * ),
+
      */
     public function login(Request $request)
     {

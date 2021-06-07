@@ -21,18 +21,15 @@ use App\Services;
 
 Route::middleware('auth:api')->group(function() {
     Route::get('/tenders/export', 'App\Http\Controllers\TenderController@exportExcel');
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
 
     Route::get('/me', 'App\Http\Controllers\AuthController@me');
-    Route::put('/buy', 'App\Http\Controllers\SubscribeController@buySubscription');
-    Route::delete('/tenders/unSubscribe', 'App\Http\Controllers\SubscribeController@unSubscribe');
-    Route::post('/tenders/subscribe', 'App\Http\Controllers\SubscribeController@subscribe');
-    Route::post('/tenders/addToFavorite', 'App\Http\Controllers\TenderController@addToFavorite');
-    Route::delete('/tenders/removeFromFavorite', 'App\Http\Controllers\TenderController@removeFromFavorite');
+    Route::put('/subscribe/buy', 'App\Http\Controllers\SubscribeController@buySubscription');
 
+    Route::delete('/tenders/mailing', 'App\Http\Controllers\SubscribeController@unSubscribe');
+    Route::post('/tenders/mailing', 'App\Http\Controllers\SubscribeController@subscribe');
 
+    Route::post('/tenders/favorite', 'App\Http\Controllers\TenderController@addToFavorite');
+    Route::delete('/tenders/favorite', 'App\Http\Controllers\TenderController@removeFromFavorite');
 
     Route::resource('tenders', TenderController::class);
 });

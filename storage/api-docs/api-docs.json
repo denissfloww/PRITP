@@ -41,6 +41,22 @@
                     }
                 },
                 "responses": {
+                    "200": {
+                        "description": "Возращает JWT",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "nfrwkJFJIOWE.FJIO"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Wrong credentials response",
                         "content": {
@@ -194,7 +210,7 @@
                 }
             }
         },
-        "/api/buy": {
+        "/api/subscribe/buy": {
             "put": {
                 "tags": [
                     "subscribe"
@@ -253,14 +269,14 @@
                 ]
             }
         },
-        "/api/tenders/subscribe": {
+        "/api/tenders/mailing": {
             "post": {
                 "tags": [
-                    "subscribe"
+                    "tender"
                 ],
                 "summary": "Подписка на тендер",
                 "description": "Пользователь подписывается на изменения тендера",
-                "operationId": "subscribe",
+                "operationId": "mailing",
                 "parameters": [
                     {
                         "name": "Authorization",
@@ -271,6 +287,26 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "description": "передавать okvad2 тендера и JWT токен пользователя",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "okvad2"
+                                ],
+                                "properties": {
+                                    "okvad2": {
+                                        "type": "string",
+                                        "example": "12.123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "404": {
                         "description": "okvad2 не существует",
@@ -342,16 +378,14 @@
                         "bearer": []
                     }
                 ]
-            }
-        },
-        "/api/tenders/unSubscribe": {
+            },
             "delete": {
                 "tags": [
-                    "subscribe"
+                    "tender"
                 ],
                 "summary": "Отписка от тендера",
                 "description": "Пользователь отписывается от изменения тендера",
-                "operationId": "subscribe",
+                "operationId": "Unmailing",
                 "parameters": [
                     {
                         "name": "Authorization",
@@ -362,6 +396,26 @@
                         }
                     }
                 ],
+                "requestBody": {
+                    "description": "передавать okvad2 тендера и JWT токен пользователя",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "okvad2"
+                                ],
+                                "properties": {
+                                    "okvad2": {
+                                        "type": "string",
+                                        "example": "12.123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "404": {
                         "description": "okvad2 не существует",
@@ -696,7 +750,7 @@
                 ]
             }
         },
-        "/api/tenders/addToFavorite": {
+        "/api/tenders/favorite": {
             "post": {
                 "tags": [
                     "tender"
@@ -805,9 +859,7 @@
                         "bearer": []
                     }
                 ]
-            }
-        },
-        "/api/tenders/removeFromFavorite": {
+            },
             "delete": {
                 "tags": [
                     "tender"
@@ -1106,6 +1158,13 @@
                 "title": "Tender model",
                 "description": "Tender model",
                 "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "default": 1
+                    },
                     "number": {
                         "title": "ID",
                         "description": "ID",
