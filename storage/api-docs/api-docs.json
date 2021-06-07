@@ -199,7 +199,23 @@
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Пользователь заругистрирован"
+                                            "example": "Пользователь зарегистрирован"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Регистрация не удалась",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Такой пользователь уже существует"
                                         }
                                     },
                                     "type": "object"
@@ -864,8 +880,8 @@
                 "tags": [
                     "tender"
                 ],
-                "summary": "Удаление из избранное",
-                "description": "Удаляет тендер из избранное по id",
+                "summary": "Удаление из избранного",
+                "description": "Удаляет тендер из избранного по id",
                 "operationId": "removeFromFavorite",
                 "parameters": [
                     {
@@ -1321,24 +1337,6 @@
                     }
                 },
                 "type": "object"
-            }
-        },
-        "responses": {
-            "422": {
-                "description": "Регистрация не удалась",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "message": {
-                                    "type": "string",
-                                    "example": "Такой пользователь уже существует"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
             }
         }
     },

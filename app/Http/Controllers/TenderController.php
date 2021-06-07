@@ -357,8 +357,8 @@ class TenderController extends Controller
     /**
      * @OA\delete(
      * path="/api/tenders/favorite",
-     * summary="Удаление из избранное",
-     * description="Удаляет тендер из избранное по id",
+     * summary="Удаление из избранного",
+     * description="Удаляет тендер из избранного по id",
      * operationId="removeFromFavorite",
      * tags={"tender"},
      * security={ {"bearer": {} }},

@@ -97,6 +97,8 @@ class AuthController extends Controller
         return response()->json(JWTAuth::fromUser($dbUser));
     }
 
+
+
     /**
      * @OA\get (
      * path="/api/me",
@@ -105,15 +107,14 @@ class AuthController extends Controller
      * operationId="me",
      * tags={"auth"},
      * security={ {"bearer": {} }},
-     *     @OA\Parameter(
-     *         name="Authorization",
-     *         in="header",
-     *
-     *         required=true,
-     *         @OA\Schema(
-     *             type="string"
-     *         )
-     *     ),
+     *    @OA\Parameter(
+     *       name="Authorization",
+     *       in="header",
+     *       required=true,
+     *       @OA\Schema(
+     *           type="string"
+     *       )
+     *   ),
      * @OA\Response(
      *    response=200,
      *    description="Возращает пользователя",
@@ -169,20 +170,21 @@ class AuthController extends Controller
      *    response=200,
      *    description="Пользователь зарегистрирован",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Пользователь заругистрирован")
-),
-     *      )
-     *),
+     *       @OA\Property(property="message", type="string", example="Пользователь зарегистрирован")
+     * ),
+     *      ),
+     *
      * @OA\Response(
      *    response=422,
      *    description="Регистрация не удалась",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="Такой пользователь уже существует")
      *        )
-     *     )
+     *     ),
      * )
+     *
      */
-    public function registry(Request $request)
+    public function register(Request $request)
     {
         $http = new Client();
         $response = $http->post(
