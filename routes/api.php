@@ -30,6 +30,7 @@ Route::middleware('auth:api')->group(function() {
 
     Route::post('/tenders/favorite', 'App\Http\Controllers\TenderController@addToFavorite');
     Route::delete('/tenders/favorite', 'App\Http\Controllers\TenderController@removeFromFavorite');
+    Route::get('/tenders/favourite', 'App\Http\Controllers\TenderController@getUserFavouriteTenders');
 
     Route::resource('tenders', TenderController::class);
 });

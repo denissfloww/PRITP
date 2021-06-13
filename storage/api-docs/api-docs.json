@@ -191,7 +191,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Пользователь зарегистрирован",
                         "content": {
                             "application/json": {
@@ -372,7 +372,7 @@
                             }
                         }
                     },
-                    "200": {
+                    "201": {
                         "description": "Подписался",
                         "content": {
                             "application/json": {
@@ -962,7 +962,7 @@
                             }
                         }
                     },
-                    "200": {
+                    "201": {
                         "description": "Удалён из избранного",
                         "content": {
                             "application/json": {

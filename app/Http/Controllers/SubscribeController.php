@@ -120,7 +120,7 @@ class SubscribeController extends Controller
      *        )
      *     ),
      * @OA\Response(
-     *    response=200,
+     *    response=201,
      *    description="Подписался",
      *    @OA\JsonContent(
      *       @OA\Property(property="data", type="string", example="Подписался")

@@ -167,7 +167,7 @@ class AuthController extends Controller
      *    ),
      * ),
      * @OA\Response(
-     *    response=200,
+     *    response=201,
      *    description="Пользователь зарегистрирован",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="Пользователь зарегистрирован")
@@ -178,8 +178,8 @@ class AuthController extends Controller
      *    response=422,
      *    description="Регистрация не удалась",
      *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Такой пользователь уже существует")
-     *        )
+     *       @OA\Property(property="message", type="string", example="Такой пользователь уже существует"),
+     *        ),
      *     ),
      * )
      *

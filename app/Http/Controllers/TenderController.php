@@ -401,7 +401,7 @@ class TenderController extends Controller
      *        )
      *     ),
      * @OA\Response(
-     *    response=200,
+     *    response=201,
      *    description="Удалён из избранного",
      *    @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="Удалён из избранного")
@@ -430,7 +430,7 @@ class TenderController extends Controller
 
 
         $user->favoriteTenders()->detach($tenderId);
-        return response()->json("Удалён из избранного",200);
+        return response()->json("Удалён из избранного",201);
     }
 
     /**
@@ -667,4 +667,13 @@ class TenderController extends Controller
         return response()->json('Отсутствуют права на выгрузку в excel', 403);
 
     }
+
+    //TODO: Доку тут
+    public function getUserFavouriteTenders(Request $request){
+        $user = auth()->user();
+        $userFavouriteTenders =  $user->favoriteTenders()->get();
+
+        return response()->json($userFavouriteTenders, 200);
+    }
+
 }
