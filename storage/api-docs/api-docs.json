@@ -1166,6 +1166,54 @@
                     }
                 ]
             }
+        },
+        "/api/tenders/favourite": {
+            "get": {
+                "tags": [
+                    "tender"
+                ],
+                "summary": "Получение избранных тендоров",
+                "description": "Возвращает тендоры которые пользователь добавил в избранное",
+                "operationId": "getFavourite",
+                "responses": {
+                    "403": {
+                        "description": "Отсутствуют права на получение избранных тендеров",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Отсутствуют права на получение избранных тендеров"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Возвращенные тендеры",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Tender": {
+                                            "$ref": "#/components/schemas/Tender"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
         }
     },
     "components": {

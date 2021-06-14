@@ -668,12 +668,37 @@ class TenderController extends Controller
 
     }
 
-    //TODO: Доку тут
+    /**
+     * @OA\get(
+     * path="/api/tenders/favourite",
+     * summary="Получение избранных тендоров",
+     * description="Возвращает тендоры которые пользователь добавил в избранное",
+     * operationId="getFavourite",
+     * tags={"tender"},
+     * security={ {"bearer": {} }},
+     * @OA\Response(
+     *    response=403,
+     *    description="Отсутствуют права на получение избранных тендеров",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Отсутствуют права на получение избранных тендеров")
+     *        )
+     *     ),
+     *  @OA\Response(
+     *    response=200,
+     *    description="Возвращенные тендеры",
+     *    @OA\JsonContent(
+     * @OA\Property(property="Tender", type="object", ref="#/components/schemas/Tender"),
+     *        )
+     *     ),
+     * )
+     */
     public function getUserFavouriteTenders(Request $request){
         $user = auth()->user();
-        $userFavouriteTenders =  $user->favoriteTenders()->get();
-
-        return response()->json($userFavouriteTenders, 200);
+        if (Bouncer::is($user)->an('subscriber')) {
+            $userFavouriteTenders = $user->favoriteTenders()->get();
+            return response()->json($userFavouriteTenders, 200);
+        }
+        return response()->json('Отсутствуют права на получение избранных тендеров', 403);
     }
 
 }
