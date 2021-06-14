@@ -2,6 +2,7 @@
 
 namespace App\Services\TenderParser;
 
+use App\Events\TenderImported;
 use App\Models\Customer;
 use App\Models\Tender;
 use App\Models\Currency;
@@ -10,6 +11,7 @@ use App\Models\TenderType;
 use carono\okvad\Okvad2;
 use Illuminate\Support\Facades\Log;
 use Monolog\Logger;
+use mysql_xdevapi\Exception;
 use Orchestra\Parser\Xml\Facade as XmlParser;
 use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Component\DomCrawler\Crawler;
@@ -35,40 +37,49 @@ class XmlTenderParserService
 
     public function parse()
     {
-        for($i = 1; $i < 3; $i++){
-            $url = env('TENDER_BASE_URI') . "?morphology=on&fz44=on&fz233=on&page=$i";
-            $res = $this->client->get($url);//Завиток работает
+            $tenders = [];
+            for($i = 1; $i < 3; $i++){
+                $url = env('TENDER_BASE_URI') . "?morphology=on&fz233=on&page=$i";
+                $res = $this->client->get($url);//Завиток работает
 
-            $items = new \SimpleXmlElement($res->getBody()->getContents());//Завиток 2 работает
+                $items = new \SimpleXmlElement($res->getBody()->getContents());//Завиток 2 работает
 
-            foreach ($items->channel->item as $item) {
-                $description = trim(preg_replace(['/<[^>]*>/', '/\s+/'], ' ', $item->description));
-                $description = strip_tags($description);
-                $source_url = (string)$item->link;
+                foreach ($items->channel->item as $item) {
+                    $description = trim(preg_replace(['/<[^>]*>/', '/\s+/'], ' ', $item->description));
+                    $description = strip_tags($description);
+                    $source_url = (string)$item->link;
 
-                if (!preg_match('/https:\/\/zakupki\.gov\.ru/m', $source_url)) {
-                    $source_url = 'https://zakupki.gov.ru' . $source_url;
+                    if (!preg_match('/https:\/\/zakupki\.gov\.ru/m', $source_url)) {
+                        $source_url = 'https://zakupki.gov.ru' . $source_url;
+                    }
+
+                    preg_match('/regNumber=(\d+)/m', $source_url, $numbersMatches);
+                    $number = $numbersMatches[1];
+
+                        $tender = $this->makeTender($description, $source_url, $number);
+
+                    try {
+                        if (preg_match('/Размещение выполняется по: 223-ФЗ/m', $description)) {
+                            $tenderType = $this->getTenderType('233-ФЗ', 'Федеральный закон от 18 июля 2011 года № 223-ФЗ «О закупках товаров, работ, услуг отдельными видами юридических лиц» — федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок отдельными видами юридических лиц.');
+                            $tender->type()->associate($tenderType);
+                            $this->fz233ParserService->parse($tender);
+                        } elseif (preg_match('/Размещение выполняется по: 44-ФЗ/m', $description)) {
+                            $tenderType = $this->getTenderType('44-ФЗ', 'Федеральный закон № 44-ФЗ от 5 апреля 2013 года «О контрактной системе в сфере закупок товаров, работ, услуг для обеспечения государственных и муниципальных нужд» — Федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок товаров, работ и услуг для обеспечения государственных и');
+                            $tender->type()->associate($tenderType);
+                            $this->fz44ParserService->parse($tender);
+                        }
+                    } catch (\Throwable $e){
+                        Log::warning('Skip tender');
+                    }
+
+                    Log::info('Tender created', ['id' => $tender->id, 'name' => $tender->name]);
+                    $tenders[] = $tender;
                 }
-
-                preg_match('/regNumber=(\d+)/m', $source_url, $numbersMatches);
-                $number = $numbersMatches[1];
-
-                $tender = $this->makeTender($description, $source_url, $number);
-
-
-                if (preg_match('/Размещение выполняется по: 223-ФЗ/m', $description)) {
-                    $tenderType = $this->getTenderType('233-ФЗ', 'Федеральный закон от 18 июля 2011 года № 223-ФЗ «О закупках товаров, работ, услуг отдельными видами юридических лиц» — федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок отдельными видами юридических лиц.');
-                    $tender->type()->associate($tenderType);
-                    $this->fz233ParserService->parse($tender);
-                } elseif (preg_match('/Размещение выполняется по: 44-ФЗ/m', $description)) {
-                    $tenderType = $this->getTenderType('44-ФЗ', 'Федеральный закон № 44-ФЗ от 5 апреля 2013 года «О контрактной системе в сфере закупок товаров, работ, услуг для обеспечения государственных и муниципальных нужд» — Федеральный закон Российской Федерации, регламентирующий порядок осуществления закупок товаров, работ и услуг для обеспечения государственных и');
-                    $tender->type()->associate($tenderType);
-                    $this->fz44ParserService->parse($tender);
-                }
-
-                Log::info('Tender created', ['id' => $tender->id, 'name' => $tender->name]);
             }
-        }
+
+            TenderImported::dispatch($tenders);
+
+
     }
 
     private function getTenderType(string $name, string $description)

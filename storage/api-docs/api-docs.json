@@ -1175,6 +1175,16 @@
                 "summary": "Получение избранных тендоров",
                 "description": "Возвращает тендоры которые пользователь добавил в избранное",
                 "operationId": "getFavourite",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "403": {
                         "description": "Отсутствуют права на получение избранных тендеров",

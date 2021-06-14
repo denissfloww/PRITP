@@ -35,5 +35,7 @@ Route::middleware('auth:api')->group(function() {
     Route::resource('tenders', TenderController::class);
 });
 
+Route::get('/test','App\Http\Controllers\TenderController@testEmail');
+
 Route::any('/login', 'App\Http\Controllers\AuthController@login')->name('login');
 Route::post('/register','App\Http\Controllers\AuthController@register');

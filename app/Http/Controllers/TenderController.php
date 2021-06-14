@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TestEmail;
 use App\Models\Tender;
 use App\Models\TenderMailing;
 use App\Models\User;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use Silber\Bouncer\BouncerFacade as Bouncer;
+use Illuminate\Support\Facades\Mail as Mail;
+use Illuminate\Contracts\Mail\Mailable as Mailable;
 
 class TenderController extends Controller
 {
@@ -676,6 +679,15 @@ class TenderController extends Controller
      * operationId="getFavourite",
      * tags={"tender"},
      * security={ {"bearer": {} }},
+     *  @OA\Parameter(
+     *         name="Authorization",
+     *         in="header",
+     *
+     *         required=true,
+     *         @OA\Schema(
+     *             type="string"
+     *         )
+     *     ),
      * @OA\Response(
      *    response=403,
      *    description="Отсутствуют права на получение избранных тендеров",
@@ -700,5 +712,4 @@ class TenderController extends Controller
         }
         return response()->json('Отсутствуют права на получение избранных тендеров', 403);
     }
-
 }
