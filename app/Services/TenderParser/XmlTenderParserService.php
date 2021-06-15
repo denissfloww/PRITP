@@ -74,6 +74,12 @@ class XmlTenderParserService
 
                     Log::info('Tender created', ['id' => $tender->id, 'name' => $tender->name]);
                     $tenders[] = $tender;
+                    if(count($tenders) > 5){
+                        break;
+                    }
+                }
+                if(count($tenders) > 5){
+                    break;
                 }
             }
 
